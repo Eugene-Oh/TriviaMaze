@@ -3,6 +3,12 @@ public class QuestionAnswer {
     private String correctAnswer;
     private String[] answer;
 
+    /**
+     *
+     * @param question
+     * @param answers
+     * @param correctAnswer
+     */
     public QuestionAnswer(String question, String[] answers, String correctAnswer){
 
     }
