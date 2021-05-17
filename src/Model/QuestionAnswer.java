@@ -1,3 +1,5 @@
+package TriviaMaze.src.Model;
+
 public class QuestionAnswer {
     private String question;
     private String correctAnswer;
