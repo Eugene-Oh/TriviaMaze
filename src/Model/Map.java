@@ -20,6 +20,11 @@ public class Map {
     /**
      * 2-D array representing the map.
      */
+    //#TODO: Create the map with numbers.
+    // 1: passable terrain
+    // 2: uninteractable terrain
+    // 3: question rooms
+    // 4:
     final private int myMap[][];
 
     /**

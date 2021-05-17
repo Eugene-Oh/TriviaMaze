@@ -25,8 +25,17 @@ public class TriviaMazeGUI {
     /** Frame for the overall GUI. */
     private final JFrame myFrame;
 
+    //TODO: eugene
     /** Panel for the overall GUI. */
-    private final JPanel myPanel;
+    private final JPanel myMazePanel;
+
+    //TODO: yavuzalp
+    /** Panel for the overall GUI. */
+//    private final JPanel myQuestionPanel;
+
+    //TODO: jonathan
+    /** Panel for the overall GUI. */
+//    private final JPanel myControlPanel;
 
     /** The menu bar for the GUI. */
     private final JMenuBar myMenuBar;
@@ -51,7 +60,7 @@ public class TriviaMazeGUI {
      */
     public TriviaMazeGUI() {
         myFrame = new JFrame();
-        myPanel = new JPanel();
+        myMazePanel = new JPanel();
         myMenuBar = createMenuBar();
         myFrame.setTitle("TriviaMaze");
 
@@ -60,9 +69,9 @@ public class TriviaMazeGUI {
         myFrame.setBackground(Color.BLACK);
 
         // Does not work properly. Fills the whole GUI.
-        myPanel.setPreferredSize(PANEL_SIZE);
-        myPanel.setBackground(Color.BLACK);
-        myFrame.add(myPanel);
+        myMazePanel.setPreferredSize(PANEL_SIZE);
+        myMazePanel.setBackground(Color.BLACK);
+        myFrame.add(myMazePanel);
 
         myFrame.add(myMenuBar, BorderLayout.NORTH);
         createMapGUI();
