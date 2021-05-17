@@ -1,3 +1,5 @@
+package Model;
+
 import java.util.HashMap;
 
 /**Mazeroom is the rooms that will reside in the maze
@@ -27,7 +29,7 @@ public class MazeRoom {
     private Boolean isLocked;
 
     /**
-     * MazeRoom constructor
+     * Model.MazeRoom constructor
      * @param theLocation location of the room
      * @param thePassN  if user can pass to N
      * @param thePassS  if user can pass to S
