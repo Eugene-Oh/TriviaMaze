@@ -1,30 +1,37 @@
-package TriviaMaze.src.Model;
+package src.Model;
 
 public class QuestionAnswer {
-    private String question;
-    private String correctAnswer;
-    private String[] answer;
+    private String myQuestion;
+    private String myCorrectAnswer;
+    private String[] myAnswers;
 
     /**
      *
-     * @param question
-     * @param answers
-     * @param correctAnswer
+     * @param theQuestion
+     * @param theAnswers
+     * @param theCorrectAnswer
      */
-    public QuestionAnswer(String question, String[] answers, String correctAnswer){
+    public QuestionAnswer(String theQuestion, String[] theAnswers, String theCorrectAnswer){
+        myQuestion = theQuestion;
+        myAnswers = theAnswers;
+        myCorrectAnswer = theCorrectAnswer;
 
     }
 
-    public String getQuestion() {
-        return question;
+    public Boolean isRightAnswer(int theChoice) {
+        return myCorrectAnswer == myAnswers[theChoice];
     }
 
-    public String[] getAnswer() {
-        return answer;
+    public String getMyQuestion() {
+        return myQuestion;
+    }
+
+    public String[] getAnswers() {
+        return myAnswers;
     }
 
     public String getCorrectAnswer() {
-        return correctAnswer;
+        return myCorrectAnswer;
     }
 
 

@@ -1,4 +1,4 @@
-package TriviaMaze.src;
+package src.Logic;
 
 import java.awt.*;
 

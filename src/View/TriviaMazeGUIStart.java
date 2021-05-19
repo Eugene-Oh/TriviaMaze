@@ -1,4 +1,4 @@
-package View;
+package src.View;
 
 /**
  * This class will start the Trivia Maze GUI.

@@ -1,4 +1,4 @@
-package View;
+package src.View;
 
 
 /**
@@ -8,7 +8,7 @@ package View;
  * @version Spring 2021
  */
 
-import TriviaMaze.DrawPanel;
+import src.Model.QuestionAnswer;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -35,7 +35,7 @@ public class TriviaMazeGUI extends JPanel {
 
     //TODO: yavuzalp
     /** Panel for the overall GUI. */
-//    private final JPanel myQuestionPanel;
+    private final JPanel myQuestionPanel;
 
     //TODO: jonathan
     /** Panel for the overall GUI. */
@@ -64,7 +64,7 @@ public class TriviaMazeGUI extends JPanel {
      */
     public TriviaMazeGUI() {
         myFrame = new JFrame();
-        myMazePanel = new JPanel();
+        myMazePanel = new JPanel(new BorderLayout());
         myMenuBar = createMenuBar();
         myFrame.setTitle("TriviaMaze");
 
@@ -78,6 +78,10 @@ public class TriviaMazeGUI extends JPanel {
         myFrame.add(myMazePanel);
 
         myFrame.add(myMenuBar, BorderLayout.NORTH);
+
+        myQuestionPanel = new QuestionPane(new QuestionAnswer("Whats up", new String[]{"True", "False"}, "False"));
+        myFrame.add(myQuestionPanel, BorderLayout.EAST);
+        myQuestionPanel.setVisible(true);
         createMapGUI();
     }
 

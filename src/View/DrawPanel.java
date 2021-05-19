@@ -1,6 +1,6 @@
-package TriviaMaze;
+package src.View;
 
-import TriviaMaze.src.Player;
+import src.Logic.Player;
 
 import javax.swing.*;
 import java.awt.*;
