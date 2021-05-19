@@ -1,11 +1,14 @@
 package View;
 
+
 /**
  * This class will set up the entirety of the Trivia Maze GUI.
  *
  * @author Eugene Oh
  * @version Spring 2021
  */
+
+import TriviaMaze.DrawPanel;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -14,7 +17,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class TriviaMazeGUI {
+
+public class TriviaMazeGUI extends JPanel {
 
     /** The size of the frame. */
     private static final Dimension FRAME_SIZE = new Dimension(1000, 600);
@@ -70,7 +74,7 @@ public class TriviaMazeGUI {
 
         // Does not work properly. Fills the whole GUI.
         myMazePanel.setPreferredSize(PANEL_SIZE);
-        myMazePanel.setBackground(Color.BLACK);
+
         myFrame.add(myMazePanel);
 
         myFrame.add(myMenuBar, BorderLayout.NORTH);
@@ -85,6 +89,12 @@ public class TriviaMazeGUI {
         myFrame.pack();
         myFrame.setLocationRelativeTo(null);
         myFrame.setVisible(true);
+
+        DrawPanel s = new DrawPanel();
+
+        myFrame.add(s);
+
+        s.setVisible(true);
     }
 
     /**
