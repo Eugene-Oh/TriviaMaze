@@ -1,5 +1,5 @@
 
-package Model; /**
+package src.Model; /**
  * TCSS 360
  */
 
@@ -21,11 +21,21 @@ public class Map {
      * 2-D array representing the map.
      */
     //#TODO: Create the map with numbers.
+    // 0: uninteractable terrain
     // 1: passable terrain
-    // 2: uninteractable terrain
-    // 3: question rooms
+    // 2: question rooms
     // 4:
-    final private int myMap[][];
+    final private int myMap[][] = { { 1, 1, 0, 1, 1, 1, 0, 0, 1, 0 },
+                                    { 0, 1, 0, 1, 0, 1, 1, 1, 1, 1 },
+                                    { 0, 1, 1, 2, 0, 1, 0, 0, 0, 1 },
+                                    { 0, 0, 0, 1, 0, 2, 1, 2, 0, 1 },
+                                    { 1, 2, 1, 1, 0, 1, 0, 1, 0, 0 },
+                                    { 0, 1, 0, 0, 0, 1, 0, 1, 1, 2 },
+                                    { 1, 1, 0, 1, 1, 1, 0, 0, 0, 1 },
+                                    { 1, 0, 0, 1, 0, 0, 0, 0, 1, 1 },
+                                    { 1, 1, 0, 1, 0, 0, 0, 0, 0, 0 },
+                                    { 0, 1, 1, 2, 1, 1, 1, 1, 1, 1 }};
+
 
     /**
      * The height of the map.
@@ -53,7 +63,7 @@ public class Map {
     public Map() {
         myHeight = DEFAULT_SIZE;
         myLength = DEFAULT_SIZE;
-        myMap = new int[DEFAULT_SIZE][DEFAULT_SIZE];
+//        myMap = new int[DEFAULT_SIZE][DEFAULT_SIZE];
         currentX = 0;
         currentY = 0;
     }
@@ -67,7 +77,7 @@ public class Map {
     public Map(final int theHeight, final int theLength) {
         myHeight = theHeight;
         myLength = theLength;
-        myMap = new int[myHeight][myLength];
+//        myMap = new int[myHeight][myLength];
         currentX = 0;
         currentY = 0;
     }

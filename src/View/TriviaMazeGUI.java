@@ -29,15 +29,12 @@ public class TriviaMazeGUI extends JPanel {
     /** Frame for the overall GUI. */
     private final JFrame myFrame;
 
-    //TODO: eugene
     /** Panel for the overall GUI. */
     private final JPanel myMazePanel;
 
-    //TODO: yavuzalp
     /** Panel for the overall GUI. */
     private final JPanel myQuestionPanel;
 
-    //TODO: jonathan
     /** Panel for the overall GUI. */
 //    private final JPanel myControlPanel;
 
@@ -94,11 +91,11 @@ public class TriviaMazeGUI extends JPanel {
         myFrame.setLocationRelativeTo(null);
         myFrame.setVisible(true);
 
-        DrawPanel s = new DrawPanel();
-
-        myFrame.add(s);
-
-        s.setVisible(true);
+//        DrawPanel s = new DrawPanel();
+//
+//        myFrame.add(s);
+//
+//        s.setVisible(true);
     }
 
     /**
@@ -252,7 +249,10 @@ public class TriviaMazeGUI extends JPanel {
         JPanel panel = new JPanel();
         panel.setPreferredSize(PANEL_SIZE);
         panel.setLayout(new GridLayout(5,5));
+//        Model.Map map = new Model.Map();
+//        #TODO: create complete maze map here.
         JLabel[][] map = new JLabel[5][5];
+
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 map[i][j] = new JLabel();
@@ -261,6 +261,6 @@ public class TriviaMazeGUI extends JPanel {
                 panel.add(map[i][j]);
             }
         }
-//        myFrame.add(panel);
+        myFrame.add(panel);
     }
 }
