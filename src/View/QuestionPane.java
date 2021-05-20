@@ -9,53 +9,70 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-//import  TriviaMaze.src.Model.QuestionAnswer;
+import  src.Model.QuestionAnswer;
 
     public class QuestionPane extends JPanel {
-
-        public QuestionPane(src.Model.QuestionAnswer question) {
+//        public Boolean isAnswered = false;
+//        public Boolean isCorrectAnswer = false;
+        public QuestionPane(QuestionAnswer question) {
             setLayout(new GridBagLayout());
 
-            final JPopupMenu popup = new JPopupMenu();
-            DefaultListModel<String> model = new DefaultListModel<>();
-//            JLabel questiontext = new JLabel("   TEXT FOR QUESTION NUMBER 1 ");
-//            add(questiontext);
+            JLabel questiontext = new JLabel(question.getMyQuestion());
+            JLabel answerCorrect = new JLabel("Correct Answer!");
+            JLabel answerWrong = new JLabel(String.format("<html>Wrong Answer! <br> Correct answer was: %s </html>", question.getCorrectAnswer()));
 
-            System.out.println(question.getAnswers());
-            for( String answer: question.getAnswers()){
-                model.addElement(answer);
-            }
-            JList list = new JList(model);
-            popup.setLayout(new BorderLayout());
-            popup.add(new JScrollPane(list));
+            answerCorrect.setVisible(false);
+            answerWrong.setVisible(false);
 
-            final JButton button = new JButton("You need to answer the question!");
+            JRadioButton item1 = new JRadioButton(question.getAnswers()[0]);
+            item1.setActionCommand(question.getAnswers()[0]);
+            JRadioButton item2 = new JRadioButton(question.getAnswers()[1]);
+            item2.setActionCommand(question.getAnswers()[1]);
+            JRadioButton item3 = new JRadioButton(question.getAnswers()[2]);
+            item3.setActionCommand(question.getAnswers()[2]);
+            JRadioButton item4 = new JRadioButton(question.getAnswers()[3]);
+            item4.setActionCommand(question.getAnswers()[3]);
+            ButtonGroup bg=new ButtonGroup();
+            bg.add(item1);bg.add(item2);bg.add(item3);bg.add(item4);
+
+            Box box1 = Box.createVerticalBox();
+            box1.add(questiontext);
+            box1.add(item1);
+            box1.add(item2);
+            box1.add(item3);
+            box1.add(item4);
+            box1.add(answerCorrect);
+            box1.add(answerWrong);
+
+
+            final JButton button = new JButton("Submit!");
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Dimension size = popup.getPreferredSize();
-                    int x = (button.getWidth() - size.width) / 2;
-                    int y = button.getHeight();
-                    popup.show(button, x, y);
-                }
-            });
-
-            list.addListSelectionListener(new ListSelectionListener() {
-                @Override
-                public void valueChanged(ListSelectionEvent e) {
-                    if (question.isRightAnswer(list.getSelectedIndex())){
-                        System.out.println("right answer!");
-                        popup.setVisible(false);
+                    if(bg.getSelection().getActionCommand() == question.getCorrectAnswer()){
+                        System.out.println("Selected:" + e.getActionCommand());
+                        System.out.println("Selected:" + bg.getSelection().getActionCommand());
+                        answerCorrect.setVisible(true);
+//                        box1.setVisible(false);
+                        question.setIsAnswered(true);
+                    }else{
+                        answerWrong.setVisible(true);
                     }
+                    for(JRadioButton button: new JRadioButton[]{item1,item2,item3,item4}){
+                        button.setEnabled(false);
+                    }
+                    button.setEnabled(false);
                 }
             });
+            box1.add(button);
+            add(box1);
 
-            add(button);
+
         }
 
         @Override
         public Dimension getPreferredSize() {
-            return new Dimension(200, 200);
+            return new Dimension(250, 250);
         }
 
         protected void paintComponent(Graphics g) {

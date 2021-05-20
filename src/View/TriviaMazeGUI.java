@@ -76,8 +76,10 @@ public class TriviaMazeGUI extends JPanel {
 
         myFrame.add(myMenuBar, BorderLayout.NORTH);
 
-        myQuestionPanel = new QuestionPane(new QuestionAnswer("Whats up", new String[]{"True", "False"}, "False"));
+        QuestionAnswer question = new QuestionAnswer("What is 2 x 2?", new String[]{"2", "3","4", "5"}, "4");
+        myQuestionPanel = new QuestionPane(question);
         myFrame.add(myQuestionPanel, BorderLayout.EAST);
+//        System.out.println(question.getIsAnswered());
         myQuestionPanel.setVisible(true);
         createMapGUI();
     }
