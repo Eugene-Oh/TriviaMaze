@@ -245,20 +245,26 @@ public class TriviaMazeGUI extends JPanel {
      * Creates the map from the 2-D Model.Map object and inserts it into the GUI.
      */
     private void createMapGUI() {
-        // Add code here ---------------
+        // Creates a new panel and map object
         JPanel panel = new JPanel();
+        src.Model.Map map = new src.Model.Map();
         panel.setPreferredSize(PANEL_SIZE);
-        panel.setLayout(new GridLayout(5,5));
-//        Model.Map map = new Model.Map();
-//        #TODO: create complete maze map here.
-        JLabel[][] map = new JLabel[5][5];
+        panel.setLayout(new GridLayout(map.getLength(),map.getHeight()));
+        JLabel[][] element = new JLabel[map.getLength()][map.getHeight()];
 
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                map[i][j] = new JLabel();
-                map[i][j].setBorder(new LineBorder(Color.RED));
-                map[i][j].setOpaque(true);
-                panel.add(map[i][j]);
+        // Creates a 2-D array of JLabels representing each "room" based on the map's numbers.
+        for (int i = 0; i < map.getLength(); i++) {
+            for (int j = 0; j < map.getHeight(); j++) {
+                element[i][j] = new JLabel();
+                if (map.getElement(i, j) == 0) {
+                    element[i][j].setBackground(Color.BLACK);
+                } else if (map.getElement(i, j) == 1) {
+                    element[i][j].setBackground(Color.WHITE);
+                } else if (map.getElement(i, j) == 2) {
+                    element[i][j].setBackground(Color.BLUE);
+                }
+                element[i][j].setOpaque(true);
+                panel.add(element[i][j]);
             }
         }
         myFrame.add(panel);
