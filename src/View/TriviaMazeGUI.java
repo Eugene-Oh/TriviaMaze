@@ -206,7 +206,7 @@ public class TriviaMazeGUI extends JPanel {
             public void mousePressed(MouseEvent event) {
                 final JOptionPane aboutPane = new JOptionPane();
                 aboutPane.showMessageDialog(new JFrame(), "This is the Trivia Maze Game\n",
-                        "About", JOptionPane.INFORMATION_MESSAGE);
+                      "About", JOptionPane.INFORMATION_MESSAGE);
             }
         });
     }
@@ -223,7 +223,7 @@ public class TriviaMazeGUI extends JPanel {
             public void mousePressed(MouseEvent event) {
                 final JOptionPane instructionsPane = new JOptionPane();
                 instructionsPane.showMessageDialog(new JFrame(), "Instructions: Play the game!\n",
-                                              "Game Instructions: ", JOptionPane.INFORMATION_MESSAGE);
+                      "Game Instructions: ", JOptionPane.INFORMATION_MESSAGE);
             }
         });
     }
@@ -259,11 +259,11 @@ public class TriviaMazeGUI extends JPanel {
             for (int j = 0; j < map.getHeight(); j++) {
                 element[i][j] = new JLabel();
                 if (map.getElement(i, j) == 0) {
-                    element[i][j].setBackground(Color.BLACK);
+                    element[i][j].setIcon(new ImageIcon("TriviaMaze\\src\\Sprites\\grass.png"));
                 } else if (map.getElement(i, j) == 1) {
-                    element[i][j].setBackground(Color.WHITE);
+                    element[i][j].setIcon(new ImageIcon("TriviaMaze\\src\\Sprites\\sand.png"));
                 } else if (map.getElement(i, j) == 2) {
-                    element[i][j].setBackground(Color.BLUE);
+                    element[i][j].setIcon(new ImageIcon("TriviaMaze\\src\\Sprites\\wall.png"));
                 }
                 element[i][j].setOpaque(true);
                 panel.add(element[i][j]);
