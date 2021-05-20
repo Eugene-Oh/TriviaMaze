@@ -137,4 +137,13 @@ public class Map {
     public int getY() {
         return currentY;
     }
+
+    /**
+     * Returns the element in the designated spot in the array.
+     *
+     * @return The element in the array.
+     */
+    public int getElement(int y, int x) {
+        return myMap[y][x];
     }
+}

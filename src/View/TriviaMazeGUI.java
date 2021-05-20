@@ -29,15 +29,12 @@ public class TriviaMazeGUI extends JPanel {
     /** Frame for the overall GUI. */
     private final JFrame myFrame;
 
-    //TODO: eugene
     /** Panel for the overall GUI. */
     private final JPanel myMazePanel;
 
-    //TODO: yavuzalp
     /** Panel for the overall GUI. */
     private final JPanel myQuestionPanel;
 
-    //TODO: jonathan
     /** Panel for the overall GUI. */
 //    private final JPanel myControlPanel;
 
@@ -79,8 +76,10 @@ public class TriviaMazeGUI extends JPanel {
 
         myFrame.add(myMenuBar, BorderLayout.NORTH);
 
-        myQuestionPanel = new QuestionPane(new QuestionAnswer("Whats up", new String[]{"True", "False"}, "False"));
+        QuestionAnswer question = new QuestionAnswer("What is 2 x 2?", new String[]{"2", "3","4", "5"}, "4");
+        myQuestionPanel = new QuestionPane(question);
         myFrame.add(myQuestionPanel, BorderLayout.EAST);
+//        System.out.println(question.getIsAnswered());
         myQuestionPanel.setVisible(true);
         createMapGUI();
     }
@@ -93,9 +92,12 @@ public class TriviaMazeGUI extends JPanel {
         myFrame.pack();
         myFrame.setLocationRelativeTo(null);
         myFrame.setVisible(true);
-        DrawPanel s = new DrawPanel();
-        myFrame.add(s);
-        s.setVisible(true);
+
+//        DrawPanel s = new DrawPanel();
+//
+//        myFrame.add(s);
+//
+//        s.setVisible(true);
     }
 
     /**
@@ -245,19 +247,28 @@ public class TriviaMazeGUI extends JPanel {
      * Creates the map from the 2-D Model.Map object and inserts it into the GUI.
      */
     private void createMapGUI() {
-        // Add code here ---------------
+        // Creates a new panel and map object
         JPanel panel = new JPanel();
+        src.Model.Map map = new src.Model.Map();
         panel.setPreferredSize(PANEL_SIZE);
-        panel.setLayout(new GridLayout(5,5));
-        JLabel[][] map = new JLabel[5][5];
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                map[i][j] = new JLabel();
-                map[i][j].setBorder(new LineBorder(Color.RED));
-                map[i][j].setOpaque(true);
-                panel.add(map[i][j]);
+        panel.setLayout(new GridLayout(map.getLength(),map.getHeight()));
+        JLabel[][] element = new JLabel[map.getLength()][map.getHeight()];
+
+        // Creates a 2-D array of JLabels representing each "room" based on the map's numbers.
+        for (int i = 0; i < map.getLength(); i++) {
+            for (int j = 0; j < map.getHeight(); j++) {
+                element[i][j] = new JLabel();
+                if (map.getElement(i, j) == 0) {
+                    element[i][j].setBackground(Color.BLACK);
+                } else if (map.getElement(i, j) == 1) {
+                    element[i][j].setBackground(Color.WHITE);
+                } else if (map.getElement(i, j) == 2) {
+                    element[i][j].setBackground(Color.BLUE);
+                }
+                element[i][j].setOpaque(true);
+                panel.add(element[i][j]);
             }
         }
-//        myFrame.add(panel);
+        myFrame.add(panel);
     }
 }
