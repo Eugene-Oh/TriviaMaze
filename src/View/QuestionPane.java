@@ -49,7 +49,7 @@ import  src.Model.QuestionAnswer;
             button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if(bg.getSelection().getActionCommand() == question.getCorrectAnswer()){
+                    if(question.isCorrectAnswer(bg.getSelection().getActionCommand())){
                         System.out.println("Selected:" + e.getActionCommand());
                         System.out.println("Selected:" + bg.getSelection().getActionCommand());
                         answerCorrect.setVisible(true);

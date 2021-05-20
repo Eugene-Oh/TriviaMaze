@@ -20,7 +20,7 @@ public class QuestionAnswer {
 
     }
 
-    public Boolean isRightAnswer(String theAnswer) {
+    public Boolean isCorrectAnswer(String theAnswer) {
         return myCorrectAnswer.equals(theAnswer);
     }
 
