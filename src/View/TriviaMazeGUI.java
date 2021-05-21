@@ -254,16 +254,37 @@ public class TriviaMazeGUI extends JPanel {
         panel.setLayout(new GridLayout(map.getLength(),map.getHeight()));
         JLabel[][] element = new JLabel[map.getLength()][map.getHeight()];
 
+        ImageIcon grass = new ImageIcon("TriviaMaze\\src\\Sprites\\grass.png");
+        ImageIcon sand = new ImageIcon("TriviaMaze\\src\\Sprites\\sand.png");
+        ImageIcon wall = new ImageIcon("TriviaMaze\\src\\Sprites\\wall.png");
+        if (grass.getIconHeight()==-1){
+            grass = new ImageIcon("./src/Sprites/grass.png");
+            sand = new ImageIcon("./src/Sprites/sand.png");
+            wall = new ImageIcon("./src/Sprites/wall.png");
+        }
+        //resizing the ImageIcon
+        Image image = grass.getImage(); // transform it
+        Image newImg = image.getScaledInstance(72, 72,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+        grass = new ImageIcon(newImg);
+
+        Image image2 = sand.getImage(); // transform it
+        Image newImg2 = image2.getScaledInstance(72, 72,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+        sand = new ImageIcon(newImg2);
+
+        Image image3 = wall.getImage(); // transform it
+        Image newImg3 = image3.getScaledInstance(72, 72,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
+        wall = new ImageIcon(newImg3);
+
         // Creates a 2-D array of JLabels representing each "room" based on the map's numbers.
         for (int i = 0; i < map.getLength(); i++) {
             for (int j = 0; j < map.getHeight(); j++) {
                 element[i][j] = new JLabel();
                 if (map.getElement(i, j) == 0) {
-                    element[i][j].setIcon(new ImageIcon("TriviaMaze\\src\\Sprites\\grass.png"));
+                    element[i][j].setIcon(grass);
                 } else if (map.getElement(i, j) == 1) {
-                    element[i][j].setIcon(new ImageIcon("TriviaMaze\\src\\Sprites\\sand.png"));
+                    element[i][j].setIcon(sand);
                 } else if (map.getElement(i, j) == 2) {
-                    element[i][j].setIcon(new ImageIcon("TriviaMaze\\src\\Sprites\\wall.png"));
+                    element[i][j].setIcon(wall);
                 }
                 element[i][j].setOpaque(true);
                 panel.add(element[i][j]);
