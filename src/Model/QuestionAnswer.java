@@ -1,5 +1,7 @@
 package src.Model;
 
+import java.util.Arrays;
+
 public class QuestionAnswer {
     private String myQuestion;
     private String myCorrectAnswer;
@@ -44,4 +46,9 @@ public class QuestionAnswer {
     public void setIsAnswered(Boolean answered) {
         isAnswered = answered;
     }
+
+    public String toString() {
+        return "Question: " + myQuestion + "\nAnswers: " + Arrays.toString(myAnswers) + "\nCorrect Answer: " + myCorrectAnswer;
+    }
+
 }

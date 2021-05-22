@@ -9,6 +9,7 @@ package src.View;
  */
 
 import src.Model.QuestionAnswer;
+import src.sql.SQLHelper;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -76,7 +77,8 @@ public class TriviaMazeGUI extends JPanel {
 
         myFrame.add(myMenuBar, BorderLayout.NORTH);
 
-        QuestionAnswer question = new QuestionAnswer("What is 2 x 2?", new String[]{"2", "3","4", "5"}, "4");
+//        QuestionAnswer question = new QuestionAnswer("What is 2 x 2?", new String[]{"2", "3","4", "5"}, "4");
+        QuestionAnswer question = SQLHelper.getQuestionAnswer();
         myQuestionPanel = new QuestionPane(question);
         myFrame.add(myQuestionPanel, BorderLayout.EAST);
 //        System.out.println(question.getIsAnswered());
