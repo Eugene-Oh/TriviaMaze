@@ -1,10 +1,9 @@
 package src.View;
 
-
 /**
  * This class will set up the entirety of the Trivia Maze GUI.
  *
- * @author Eugene Oh
+ * @author Eugene Oh, Yavuzalp Turkoglu, Jonathan Cho
  * @version Spring 2021
  */
 
@@ -12,7 +11,6 @@ import src.Model.QuestionAnswer;
 import src.sql.SQLHelper;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -31,13 +29,10 @@ public class TriviaMazeGUI extends JPanel {
     private final JFrame myFrame;
 
     /** Panel for the overall GUI. */
-    private final JPanel myMazePanel;
-
-    /** Panel for the overall GUI. */
     private final JPanel myQuestionPanel;
 
     /** Panel for the overall GUI. */
-//    private final JPanel myControlPanel;
+//  private final JPanel myControlPanel;
 
     /** The menu bar for the GUI. */
     private final JMenuBar myMenuBar;
@@ -62,28 +57,18 @@ public class TriviaMazeGUI extends JPanel {
      */
     public TriviaMazeGUI() {
         myFrame = new JFrame();
-        myMazePanel = new JPanel(new BorderLayout());
         myMenuBar = createMenuBar();
         myFrame.setTitle("TriviaMaze");
-
-        // Add code here ---------------
         myFrame.setPreferredSize(FRAME_SIZE);
         myFrame.setBackground(Color.BLACK);
-
-        // Does not work properly. Fills the whole GUI.
-        myMazePanel.setPreferredSize(PANEL_SIZE);
-
-        myFrame.add(myMazePanel);
-
         myFrame.add(myMenuBar, BorderLayout.NORTH);
-
-//        QuestionAnswer question = new QuestionAnswer("What is 2 x 2?", new String[]{"2", "3","4", "5"}, "4");
+//      QuestionAnswer question = new QuestionAnswer("What is 2 x 2?", new String[]{"2", "3","4", "5"}, "4");
         QuestionAnswer question = SQLHelper.getQuestionAnswer();
-        myQuestionPanel = new QuestionPane(question);
+        myQuestionPanel = new src.View.QuestionPane(question);
         myFrame.add(myQuestionPanel, BorderLayout.EAST);
-//        System.out.println(question.getIsAnswered());
+//      System.out.println(question.getIsAnswered());
         myQuestionPanel.setVisible(true);
-        createMapGUI();
+        myFrame.add(new src.View.MazePanel());
     }
 
     /**
@@ -94,12 +79,6 @@ public class TriviaMazeGUI extends JPanel {
         myFrame.pack();
         myFrame.setLocationRelativeTo(null);
         myFrame.setVisible(true);
-
-//        DrawPanel s = new DrawPanel();
-//
-//        myFrame.add(s);
-//
-//        s.setVisible(true);
     }
 
     /**
@@ -243,55 +222,5 @@ public class TriviaMazeGUI extends JPanel {
                 // Add code here ---------------
             }
         });
-    }
-
-    /**
-     * Creates the map from the 2-D Model.Map object and inserts it into the GUI.
-     */
-    private void createMapGUI() {
-        // Creates a new panel and map object
-        JPanel panel = new JPanel();
-        src.Model.Map map = new src.Model.Map();
-        panel.setPreferredSize(PANEL_SIZE);
-        panel.setLayout(new GridLayout(map.getLength(),map.getHeight()));
-        JLabel[][] element = new JLabel[map.getLength()][map.getHeight()];
-
-        ImageIcon grass = new ImageIcon("TriviaMaze\\src\\Sprites\\grass.png");
-        ImageIcon sand = new ImageIcon("TriviaMaze\\src\\Sprites\\sand.png");
-        ImageIcon wall = new ImageIcon("TriviaMaze\\src\\Sprites\\wall.png");
-        if (grass.getIconHeight()==-1){
-            grass = new ImageIcon("./src/Sprites/grass.png");
-            sand = new ImageIcon("./src/Sprites/sand.png");
-            wall = new ImageIcon("./src/Sprites/wall.png");
-        }
-        //resizing the ImageIcon
-        Image image = grass.getImage(); // transform it
-        Image newImg = image.getScaledInstance(72, 72,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
-        grass = new ImageIcon(newImg);
-
-        Image image2 = sand.getImage(); // transform it
-        Image newImg2 = image2.getScaledInstance(72, 72,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
-        sand = new ImageIcon(newImg2);
-
-        Image image3 = wall.getImage(); // transform it
-        Image newImg3 = image3.getScaledInstance(72, 72,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
-        wall = new ImageIcon(newImg3);
-
-        // Creates a 2-D array of JLabels representing each "room" based on the map's numbers.
-        for (int i = 0; i < map.getLength(); i++) {
-            for (int j = 0; j < map.getHeight(); j++) {
-                element[i][j] = new JLabel();
-                if (map.getElement(i, j) == 0) {
-                    element[i][j].setIcon(grass);
-                } else if (map.getElement(i, j) == 1) {
-                    element[i][j].setIcon(sand);
-                } else if (map.getElement(i, j) == 2) {
-                    element[i][j].setIcon(wall);
-                }
-                element[i][j].setOpaque(true);
-                panel.add(element[i][j]);
-            }
-        }
-        myFrame.add(panel);
     }
 }
