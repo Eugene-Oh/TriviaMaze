@@ -3,9 +3,13 @@ package src.Model;
 import java.util.Arrays;
 
 public class QuestionAnswer {
+
     private String myQuestion;
+
     private String myCorrectAnswer;
+
     private String[] myAnswers;
+
     private Boolean isAnswered;
 
     /**

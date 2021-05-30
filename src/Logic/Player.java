@@ -8,6 +8,10 @@ public class Player extends Rectangle {
     /** The size of each room. */
     private static final int ROOM_SIZE = 45;
 
+    /** Starting room for the player. */
+    private static final int PLAYER_START = 1;
+
+    /** Current room X and Y-Coordinate. */
     private int roomX, roomY;
 
     private Image player;
@@ -17,8 +21,8 @@ public class Player extends Rectangle {
         Image playerImage = img.getImage();
         player = playerImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
 
-        roomX = 1;
-        roomY = 1;
+        roomX = PLAYER_START;
+        roomY = PLAYER_START;
     }
 
     public Image getPlayer() {
