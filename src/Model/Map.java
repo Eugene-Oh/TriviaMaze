@@ -1,5 +1,6 @@
 
-package src.Model; /**
+package src.Model;
+/**
  * TCSS 360
  */
 
@@ -15,31 +16,30 @@ import java.awt.*;
 
 public class Map {
 
-    /**
-     * The default initial size for a new map.
-     */
+    /** The default initial size for a new map. */
     private static final int MAZE_SIZE = 12;
 
-    /**
-     * The default size for each room.
-     */
+    /** The default size for each room. */
     private static final int ROOM_SIZE = 45;
 
 
     /**
      * 2-D array representing the map.
+     * 0 = GRASS
+     * 1 = SAND
+     * 2 = WALL
      */
     final private int myMap[][] = { { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
                                     { 2, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 2},
                                     { 2, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 2 },
-                                    { 2, 0, 1, 1, 2, 0, 1, 0, 0, 0, 1, 2 },
-                                    { 2, 0, 0, 0, 1, 0, 2, 1, 2, 0, 1, 2 },
-                                    { 2, 1, 2, 1, 1, 0, 1, 0, 1, 0, 0, 2 },
-                                    { 2, 0, 1, 0, 0, 0, 1, 0, 1, 1, 2, 2 },
+                                    { 2, 0, 1, 1, 3, 0, 1, 0, 0, 0, 1, 2 },
+                                    { 2, 0, 0, 0, 1, 0, 3, 1, 3, 0, 1, 2 },
+                                    { 2, 1, 3, 1, 1, 0, 1, 0, 1, 0, 0, 2 },
+                                    { 2, 0, 1, 0, 0, 0, 1, 0, 1, 1, 3, 2 },
                                     { 2, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 2 },
                                     { 2, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 2 },
                                     { 2, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 2 },
-                                    { 2, 0, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2 },
+                                    { 2, 0, 1, 1, 3, 1, 1, 1, 1, 1, 1, 2 },
                                     { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2}};
 
     /**
@@ -62,11 +62,13 @@ public class Map {
      */
     private int currentY;
 
-    private Image grass;
+    private Image myGrass;
 
-    private Image sand;
+    private Image mySand;
 
-    private Image wall;
+    private Image myWall;
+
+    private Image myQuestion;
 
     /**
      * Constructs a new map using default values.
@@ -74,15 +76,19 @@ public class Map {
     public Map() {
         ImageIcon img = new ImageIcon("TriviaMaze\\src\\Sprites\\grass.png");
         Image grassImage = img.getImage();
-        grass = grassImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
+        myGrass = grassImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
 
         img = new ImageIcon("TriviaMaze\\src\\Sprites\\sand.png");
         Image sandImage = img.getImage();
-        sand = sandImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
+        mySand = sandImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
 
         img = new ImageIcon("TriviaMaze\\src\\Sprites\\wall.png");
         Image wallImage = img.getImage();
-        wall = wallImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
+        myWall = wallImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
+
+        img = new ImageIcon("TriviaMaze\\src\\Sprites\\question.png");
+        Image questionImage = img.getImage();
+        myQuestion = questionImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
 
 
         myHeight = MAZE_SIZE;
@@ -93,15 +99,19 @@ public class Map {
     }
 
     public Image getGrass(){
-        return grass;
+        return myGrass;
     }
 
     public Image getSand(){
-        return sand;
+        return mySand;
     }
 
     public Image getWall(){
-        return wall;
+        return myWall;
+    }
+
+    public Image getQuestion() {
+        return myQuestion;
     }
 
     /**

@@ -22,9 +22,6 @@ public class TriviaMazeGUI extends JPanel {
     /** The size of the frame. */
     private static final Dimension FRAME_SIZE = new Dimension(1000, 600);
 
-    /** The size of the panel. */
-    private static final Dimension PANEL_SIZE = new Dimension(250, 250);
-
     /** Frame for the overall GUI. */
     private final JFrame myFrame;
 
@@ -57,6 +54,8 @@ public class TriviaMazeGUI extends JPanel {
      */
     public TriviaMazeGUI() {
         myFrame = new JFrame();
+        ImageIcon img = new ImageIcon("TriviaMaze\\src\\Sprites\\mazeicon.png");
+        myFrame.setIconImage(img.getImage());
         myMenuBar = createMenuBar();
         myFrame.setTitle("TriviaMaze");
         myFrame.setPreferredSize(FRAME_SIZE);
@@ -88,6 +87,7 @@ public class TriviaMazeGUI extends JPanel {
      */
     private JMenuBar createMenuBar() {
         final JMenuBar menuBar = new JMenuBar();
+        menuBar.setBackground(Color.LIGHT_GRAY);
         menuBar.add(createOptionsMenu(), BorderLayout.EAST);
         menuBar.add(createHelpMenu(), BorderLayout.EAST);
         return menuBar;
