@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Random;
 
 import org.sqlite.SQLiteDataSource;
 import src.Model.QuestionAnswer;
@@ -34,7 +35,7 @@ public class SQLHelper {
 //        addItemsToTable(ds);
 //        getItems(ds);
 //        getQuestionAnswer(ds);
-        System.out.println(getQuestionAnswer(ds));
+//        System.out.println(getQuestionAnswer(ds));
 
     }
 
@@ -130,18 +131,24 @@ public class SQLHelper {
     }
 
     public static QuestionAnswer getQuestionAnswer(){
-        return getQuestionAnswer(connectToDB());
+        return getQuestionAnswer(connectToDB(),true);
     }
 
-    public static QuestionAnswer getQuestionAnswer(SQLiteDataSource ds){
+    public static QuestionAnswer getQuestionAnswer(SQLiteDataSource ds, Boolean isRandom){
 
         //now query the database table for all its contents and display the results
         System.out.println( "Selecting all rows from test table" );
 //        String query = "SELECT * FROM questions";
-        String query = "SELECT QUESTION, ANSWER, IS_CORRECT\n" +
+        int id = 5;
+        if (isRandom){
+            Random random = new Random();
+            id = random.nextInt(20);
+            System.out.println("question id: " + id);
+        }
+        String query = String.format("SELECT QUESTION, ANSWER, IS_CORRECT\n" +
                 "FROM questions\n" +
                 "INNER JOIN answers on answers.QUESTION_ID = questions.QUESTION_ID\n" +
-                "WHERE questions.QUESTION_ID = 2;";
+                "WHERE questions.QUESTION_ID = %d;",id);
 
         try ( Connection conn = ds.getConnection();
               Statement stmt = conn.createStatement(); ) {
