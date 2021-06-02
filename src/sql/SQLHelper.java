@@ -142,7 +142,7 @@ public class SQLHelper {
         int id = 5;
         if (isRandom){
             Random random = new Random();
-            id = random.nextInt(20);
+            id = random.nextInt(19) + 1;
             System.out.println("question id: " + id);
         }
         String query = String.format("SELECT QUESTION, ANSWER, IS_CORRECT\n" +

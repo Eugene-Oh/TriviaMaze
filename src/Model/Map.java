@@ -75,18 +75,30 @@ public class Map {
      */
     public Map() {
         ImageIcon img = new ImageIcon("TriviaMaze\\src\\Sprites\\grass.png");
+        if (img.getIconHeight()==-1){
+            img = new ImageIcon("./src/Sprites/grass.png");
+        }
         Image grassImage = img.getImage();
         myGrass = grassImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
 
         img = new ImageIcon("TriviaMaze\\src\\Sprites\\sand.png");
+        if (img.getIconHeight()==-1){
+            img = new ImageIcon("./src/Sprites/sand.png");
+        }
         Image sandImage = img.getImage();
         mySand = sandImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
 
         img = new ImageIcon("TriviaMaze\\src\\Sprites\\wall.png");
+        if (img.getIconHeight()==-1){
+            img = new ImageIcon("./src/Sprites/wall.png");
+        }
         Image wallImage = img.getImage();
         myWall = wallImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
 
         img = new ImageIcon("TriviaMaze\\src\\Sprites\\question.png");
+        if (img.getIconHeight()==-1){
+            img = new ImageIcon("./src/Sprites/question.png");
+        }
         Image questionImage = img.getImage();
         myQuestion = questionImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
 

@@ -3,28 +3,48 @@ package src.View;
 import src.Logic.Player;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class MazePanel extends JPanel implements ActionListener, KeyListener {
+public class MazePanel extends JPanel implements ActionListener, KeyListener, PropertyChangeListener {
 
-    /** The size of each room. */
+    /**
+     * The size of each room.
+     */
     private static final int ROOM_SIZE = 45;
 
-    /** Timer for painting. */
+    /**
+     * Timer for painting.
+     */
     private Timer myTimer;
 
-    /** Represents the player in the maze. */
+    /**
+     * Represents the player in the maze.
+     */
     private Player myPlayer;
 
-    /** Logic behind the maze. */
+    /**
+     * Logic behind the maze.
+     */
     private src.Model.Map myMap;
 
+    /**
+     * .
+     */
+    private Boolean isAtQuestion = false;
+    /**
+     * .
+     */
+    private Boolean canPass = true;
 
     /**
      * Sets up each component necessary.
      */
-    public MazePanel(){
+    public MazePanel() {
         myTimer = new Timer(25, this);
         myPlayer = new Player();
         myMap = new src.Model.Map();
@@ -44,22 +64,54 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener {
     /**
      * Draws each maze component onto the GUI.
      */
-    public void paint(Graphics g){
+    public void paint(Graphics g) {
         super.paint(g);
         for (int i = 0; i < myMap.getLength(); i++) {
             for (int j = 0; j < myMap.getHeight(); j++) {
                 if (myMap.getElement(i, j) == 0) {
                     g.drawImage(myMap.getGrass(), j * ROOM_SIZE, i * ROOM_SIZE, null);
                 } else if (myMap.getElement(i, j) == 1) {
-                    g.drawImage(myMap.getSand(),j * ROOM_SIZE, i * ROOM_SIZE, null);
+                    g.drawImage(myMap.getSand(), j * ROOM_SIZE, i * ROOM_SIZE, null);
                 } else if (myMap.getElement(i, j) == 2) {
                     g.drawImage(myMap.getWall(), j * ROOM_SIZE, i * ROOM_SIZE, null);
-                }  else if (myMap.getElement(i, j) == 3) {
+                } else if (myMap.getElement(i, j) == 3) {
                     g.drawImage(myMap.getQuestion(), j * ROOM_SIZE, i * ROOM_SIZE, null);
                 }
             }
         }
         g.drawImage(myPlayer.getPlayer(), myPlayer.getRoomXCoordinate() * ROOM_SIZE, myPlayer.getRoomYCoordinate() * ROOM_SIZE, null);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+
+    }
+
+    public void addChangeListener(ChangeListener listener) {
+        listenerList.add(ChangeListener.class, listener);
+    }
+
+    public void removeChangeListener(ChangeListener listener) {
+        listenerList.remove(ChangeListener.class, listener);
+    }
+
+    public ChangeListener[] getChangeListeners() {
+        return listenerList.getListeners(ChangeListener.class);
+    }
+
+    protected void fireChangeListeners() {
+        ChangeEvent event = new ChangeEvent(this);
+        for (ChangeListener listener : getChangeListeners()) {
+            listener.stateChanged(event);
+        }
+    }
+
+    public void setCanPass(Boolean canPass) {
+        this.canPass = canPass;
+    }
+
+    public Boolean getAtQuestion() {
+        return isAtQuestion;
     }
 
     /**
@@ -77,22 +129,30 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener {
         public void keyPressed(KeyEvent e) {
             // ADD CODE FOR HANDLING QUESTIONS HERE!
             int keycode = e.getKeyCode();
-            if (keycode == KeyEvent.VK_W && (!(myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate() - 1) == 0) &&
-                    !(myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate() - 1) == 2))) {
-                myPlayer.move(0, -1);
+            if (canPass) {
+                if (keycode == KeyEvent.VK_W && (!(myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate() - 1) == 0) &&
+                        !(myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate() - 1) == 2))) {
+                    myPlayer.move(0, -1);
+                }
+                if (keycode == KeyEvent.VK_S && (!(myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate() + 1) == 0) &&
+                        !(myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate() + 1) == 2))) {
+                    myPlayer.move(0, 1);
+                }
+                if (keycode == KeyEvent.VK_A && !(myMap.getMapRoom(myPlayer.getRoomXCoordinate() - 1, myPlayer.getRoomYCoordinate()) == 0) &&
+                        !(myMap.getMapRoom(myPlayer.getRoomXCoordinate() - 1, myPlayer.getRoomYCoordinate()) == 2)) {
+                    myPlayer.move(-1, 0);
+                }
+                if (keycode == KeyEvent.VK_D && (!(myMap.getMapRoom(myPlayer.getRoomXCoordinate() + 1, myPlayer.getRoomYCoordinate()) == 0) &&
+                        !(myMap.getMapRoom(myPlayer.getRoomXCoordinate() + 1, myPlayer.getRoomYCoordinate()) == 2))) {
+                    myPlayer.move(1, 0);
+                }
+                if (myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate()) == 3) {
+                    isAtQuestion = true;
+                } else {
+                    isAtQuestion = false;
+                }
             }
-            if (keycode == KeyEvent.VK_S && (!(myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate() + 1) == 0) &&
-                    !(myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate() + 1) == 2))) {
-                myPlayer.move(0, 1);
-            }
-            if (keycode == KeyEvent.VK_A && !(myMap.getMapRoom(myPlayer.getRoomXCoordinate() - 1, myPlayer.getRoomYCoordinate()) == 0) &&
-                    !(myMap.getMapRoom(myPlayer.getRoomXCoordinate() - 1, myPlayer.getRoomYCoordinate()) == 2)) {
-                myPlayer.move(-1, 0);
-            }
-            if (keycode == KeyEvent.VK_D && (!(myMap.getMapRoom(myPlayer.getRoomXCoordinate() + 1, myPlayer.getRoomYCoordinate()) == 0) &&
-                    !(myMap.getMapRoom(myPlayer.getRoomXCoordinate() + 1, myPlayer.getRoomYCoordinate()) == 2))) {
-                myPlayer.move(1, 0);
-            }
+            fireChangeListeners();
         }
     }
 

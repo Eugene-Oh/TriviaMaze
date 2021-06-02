@@ -1,5 +1,11 @@
 package src.Model;
 
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 
 public class QuestionAnswer {
@@ -54,5 +60,4 @@ public class QuestionAnswer {
     public String toString() {
         return "Question: " + myQuestion + "\nAnswers: " + Arrays.toString(myAnswers) + "\nCorrect Answer: " + myCorrectAnswer;
     }
-
 }

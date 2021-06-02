@@ -1,75 +1,128 @@
 package src.View;
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import  src.Model.QuestionAnswer;
 
-    public class QuestionPane extends JPanel {
-//        public Boolean isAnswered = false;
-//        public Boolean isCorrectAnswer = false;
-        public QuestionPane(QuestionAnswer question) {
+    public class QuestionPane extends JPanel implements PropertyChangeListener{
+
+        JLabel questiontext;
+        JLabel answerCorrect;
+        JLabel answerWrong;
+        JRadioButton answer1;
+        JRadioButton answer2;
+        JRadioButton answer3;
+        JRadioButton answer4;
+        JButton button;
+        ButtonGroup bg;
+        Box box;
+        Boolean isAnsweredCorrect = false;
+
+        public QuestionPane(QuestionAnswer question){
             setLayout(new GridBagLayout());
 
-            JLabel questiontext = new JLabel(question.getMyQuestion());
-            JLabel answerCorrect = new JLabel("Correct Answer!");
-            JLabel answerWrong = new JLabel(String.format("<html>Wrong Answer! <br> Correct answer was: %s </html>", question.getCorrectAnswer()));
+            questiontext = new JLabel(question.getMyQuestion());
+            answerCorrect = new JLabel("Correct Answer!");
+            answerWrong = new JLabel(String.format("<html>Wrong Answer! <br> Correct answer was: %s </html>", question.getCorrectAnswer()));
 
             answerCorrect.setVisible(false);
             answerWrong.setVisible(false);
 
-            JRadioButton item1 = new JRadioButton(question.getAnswers()[0]);
-            item1.setActionCommand(question.getAnswers()[0]);
-            JRadioButton item2 = new JRadioButton(question.getAnswers()[1]);
-            item2.setActionCommand(question.getAnswers()[1]);
-            JRadioButton item3 = new JRadioButton(question.getAnswers()[2]);
-            item3.setActionCommand(question.getAnswers()[2]);
-            JRadioButton item4 = new JRadioButton(question.getAnswers()[3]);
-            item4.setActionCommand(question.getAnswers()[3]);
-            ButtonGroup bg=new ButtonGroup();
-            bg.add(item1);bg.add(item2);bg.add(item3);bg.add(item4);
+            answer1 = new JRadioButton(question.getAnswers()[0]);
+            answer1.setActionCommand(question.getAnswers()[0]);
+            answer2 = new JRadioButton(question.getAnswers()[1]);
+            answer2.setActionCommand(question.getAnswers()[1]);
+            answer3 = new JRadioButton(question.getAnswers()[2]);
+            answer3.setActionCommand(question.getAnswers()[2]);
+            answer4 = new JRadioButton(question.getAnswers()[3]);
+            answer4.setActionCommand(question.getAnswers()[3]);
+            bg=new ButtonGroup();
+            bg.add(answer1);bg.add(answer2);bg.add(answer3);bg.add(answer4);
 
-            Box box1 = Box.createVerticalBox();
-            box1.add(questiontext);
-            box1.add(item1);
-            box1.add(item2);
-            box1.add(item3);
-            box1.add(item4);
-            box1.add(answerCorrect);
-            box1.add(answerWrong);
+            box = Box.createVerticalBox();
+            box.add(questiontext);
+            box.add(answer1);
+            box.add(answer2);
+            box.add(answer3);
+            box.add(answer4);
+            box.add(answerCorrect);
+            box.add(answerWrong);
+
+            button = new JButton("Submit!");
+            button.addActionListener(createActionListener(question));
+            box.add(button);
+            add(box);
+        }
 
 
-            final JButton button = new JButton("Submit!");
-            button.addActionListener(new ActionListener() {
+        public void updateQuestion(QuestionAnswer question){
+            questiontext = new JLabel(question.getMyQuestion());
+            answerWrong = new JLabel(String.format("<html>Wrong Answer! <br> Correct answer was: %s </html>", question.getCorrectAnswer()));
+            answer1 = new JRadioButton(question.getAnswers()[0]);
+            answer1.setActionCommand(question.getAnswers()[0]);
+            answer2 = new JRadioButton(question.getAnswers()[1]);
+            answer2.setActionCommand(question.getAnswers()[1]);
+            answer3 = new JRadioButton(question.getAnswers()[2]);
+            answer3.setActionCommand(question.getAnswers()[2]);
+            answer4 = new JRadioButton(question.getAnswers()[3]);
+            answer4.setActionCommand(question.getAnswers()[3]);
+            repaint();
+            bg=new ButtonGroup();
+            bg.add(answer1);bg.add(answer2);bg.add(answer3);bg.add(answer4);
+            box.removeAll();
+            box.add(questiontext);
+            box.add(answer1);
+            box.add(answer2);
+            box.add(answer3);
+            box.add(answer4);
+            box.add(answerCorrect);
+            box.add(answerWrong);
+            answerCorrect.setVisible(false);
+            answerWrong.setVisible(false);
+            for( ActionListener al : button.getActionListeners() ) {
+                button.removeActionListener( al );
+            }
+            button.addActionListener(createActionListener(question));
+            button.setEnabled(true);
+            box.add(button);
+            add(box);
+            revalidate();
+            repaint();
+            System.out.println("Question is updated!");
+        }
+
+        public ActionListener createActionListener(QuestionAnswer question){
+            return new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if(question.isCorrectAnswer(bg.getSelection().getActionCommand())){
                         System.out.println("Selected:" + e.getActionCommand());
                         System.out.println("Selected:" + bg.getSelection().getActionCommand());
                         answerCorrect.setVisible(true);
-//                        box1.setVisible(false);
+                        isAnsweredCorrect = true;
+//                        box.setVisible(false);
                         question.setIsAnswered(true);
                     }else{
                         answerWrong.setVisible(true);
+                        isAnsweredCorrect = false;
                     }
-                    for(JRadioButton button: new JRadioButton[]{item1,item2,item3,item4}){
+                    for(JRadioButton button: new JRadioButton[]{answer1,answer2,answer3,answer4}){
                         button.setEnabled(false);
                     }
                     button.setEnabled(false);
+                    fireChangeListeners();
                 }
-            });
-            box1.add(button);
-            add(box1);
-
-
+            };
         }
-
         @Override
         public Dimension getPreferredSize() {
             return new Dimension(250, 250);
@@ -79,5 +132,29 @@ import  src.Model.QuestionAnswer;
             super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g.create();
             g2d.dispose();
+        }
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            System.out.println("event: " + evt);
+        }
+
+        public void addChangeListener(ChangeListener listener) {
+            listenerList.add(ChangeListener.class, listener);
+        }
+
+        public void removeChangeListener(ChangeListener listener) {
+            listenerList.remove(ChangeListener.class, listener);
+        }
+
+        public ChangeListener[] getChangeListeners() {
+            return listenerList.getListeners(ChangeListener.class);
+        }
+
+        protected void fireChangeListeners() {
+            ChangeEvent event = new ChangeEvent(this);
+            for (ChangeListener listener : getChangeListeners()) {
+                listener.stateChanged(event);
+            }
         }
     }

@@ -11,10 +11,13 @@ import src.Model.QuestionAnswer;
 import src.sql.SQLHelper;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.concurrent.TimeUnit;
 
 
 public class TriviaMazeGUI extends JPanel {
@@ -26,10 +29,11 @@ public class TriviaMazeGUI extends JPanel {
     private final JFrame myFrame;
 
     /** Panel for the overall GUI. */
-    private final JPanel myQuestionPanel;
+    private QuestionPane myQuestionPanel;
+
 
     /** Panel for the overall GUI. */
-//  private final JPanel myControlPanel;
+    private MazePanel maze;
 
     /** The menu bar for the GUI. */
     private final JMenuBar myMenuBar;
@@ -55,19 +59,76 @@ public class TriviaMazeGUI extends JPanel {
     public TriviaMazeGUI() {
         myFrame = new JFrame();
         ImageIcon img = new ImageIcon("TriviaMaze\\src\\Sprites\\mazeicon.png");
+        if (img.getIconHeight()==-1){
+            img = new ImageIcon("./src/Sprites/mazeicon.png");
+        }
         myFrame.setIconImage(img.getImage());
         myMenuBar = createMenuBar();
         myFrame.setTitle("TriviaMaze");
         myFrame.setPreferredSize(FRAME_SIZE);
         myFrame.setBackground(Color.BLACK);
         myFrame.add(myMenuBar, BorderLayout.NORTH);
-//      QuestionAnswer question = new QuestionAnswer("What is 2 x 2?", new String[]{"2", "3","4", "5"}, "4");
-        QuestionAnswer question = SQLHelper.getQuestionAnswer();
-        myQuestionPanel = new src.View.QuestionPane(question);
+        final QuestionAnswer[] question = {SQLHelper.getQuestionAnswer()};
+        myQuestionPanel = new QuestionPane(question[0]);
+        myQuestionPanel.setVisible(false);
         myFrame.add(myQuestionPanel, BorderLayout.EAST);
-//      System.out.println(question.getIsAnswered());
-        myQuestionPanel.setVisible(true);
-        myFrame.add(new src.View.MazePanel());
+        maze = new MazePanel();
+        final Boolean[] needNewQuestion = {true};
+        myQuestionPanel.addChangeListener(new ChangeListener() {
+            /** Called in response to slider events in this window. */
+            @Override
+            public void stateChanged(final ChangeEvent theEvent) {
+                System.out.println("myQuestionPanel theEvent: " + theEvent);
+                QuestionPane questionpane = (QuestionPane) theEvent.getSource();
+                System.out.println("questionpane: " + questionpane.isAnsweredCorrect);
+                if(questionpane.isAnsweredCorrect){
+                    maze.setCanPass(true);
+                needNewQuestion[0] = true;
+                }else if(!questionpane.isAnsweredCorrect){
+                    maze.setCanPass(false);
+                    try {
+                        TimeUnit.SECONDS.sleep(2);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("slept");
+                    question[0] = SQLHelper.getQuestionAnswer();
+                    myQuestionPanel.updateQuestion(question[0]);
+                }
+
+            }
+        });
+
+        maze.addChangeListener(new ChangeListener() {
+            /** Called in response to slider events in this window. */
+            @Override
+            public void stateChanged(final ChangeEvent theEvent) {
+                if(!maze.getAtQuestion()){
+                    myQuestionPanel.setVisible(false);
+                    needNewQuestion[0] = true;
+                }else{
+                    maze.setCanPass(false);
+                    myQuestionPanel.setVisible(true);
+                    if(question[0].getIsAnswered()){
+                        maze.setCanPass(true);
+                    }
+//                    else {if(!question[0].getIsAnswered()){
+////                        needNewQuestion[0] = true;
+//                        System.out.println("4");
+//                    }
+//                    }
+                }
+                if(needNewQuestion[0]){
+                    question[0] = SQLHelper.getQuestionAnswer();
+                    myQuestionPanel.updateQuestion(question[0]);
+                    needNewQuestion[0] = false;
+                }
+            }
+        });
+
+        myFrame.add(maze);
+        start();
+
     }
 
     /**
