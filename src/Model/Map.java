@@ -28,8 +28,10 @@ public class Map {
      * 0 = GRASS
      * 1 = SAND
      * 2 = WALL
+     * 3 = Question Room
+     * 4 = Finish
      */
-    final private int myMap[][] = { { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+    private int myMap[][] = { { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
                                     { 2, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 2},
                                     { 2, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 2 },
                                     { 2, 0, 1, 1, 3, 0, 1, 0, 0, 0, 1, 2 },
@@ -39,7 +41,7 @@ public class Map {
                                     { 2, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 2 },
                                     { 2, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 2 },
                                     { 2, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 2 },
-                                    { 2, 0, 1, 1, 3, 1, 1, 1, 1, 1, 1, 2 },
+                                    { 2, 0, 1, 1, 3, 1, 1, 1, 1, 1, 4, 2 },
                                     { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2}};
 
     /**
@@ -69,6 +71,8 @@ public class Map {
     private Image myWall;
 
     private Image myQuestion;
+
+    private Image myFinish;
 
     /**
      * Constructs a new map using default values.
@@ -102,6 +106,13 @@ public class Map {
         Image questionImage = img.getImage();
         myQuestion = questionImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
 
+        img = new ImageIcon("TriviaMaze\\src\\Sprites\\finish.PNG");
+        if (img.getIconHeight()==-1){
+            img = new ImageIcon("./src/Sprites/finish.PNG");
+        }
+        Image finishImage = img.getImage();
+        myFinish = finishImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
+
 
         myHeight = MAZE_SIZE;
         myLength = MAZE_SIZE;
@@ -124,6 +135,10 @@ public class Map {
 
     public Image getQuestion() {
         return myQuestion;
+    }
+
+    public Image getFinish() {
+        return myFinish;
     }
 
     /**
@@ -189,5 +204,10 @@ public class Map {
      */
     public int getElement(int y, int x) {
         return myMap[y][x];
+    }
+
+    public void changeElement(int y, int x, int roomValue) {
+        myMap[y][x] = roomValue;
+        System.out.println(myMap[y][x]);
     }
 }

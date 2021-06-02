@@ -76,10 +76,13 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
                     g.drawImage(myMap.getWall(), j * ROOM_SIZE, i * ROOM_SIZE, null);
                 } else if (myMap.getElement(i, j) == 3) {
                     g.drawImage(myMap.getQuestion(), j * ROOM_SIZE, i * ROOM_SIZE, null);
+                } else if (myMap.getElement(i, j) == 4) {
+                    g.drawImage(myMap.getFinish(), j * ROOM_SIZE, i * ROOM_SIZE, null);
                 }
             }
         }
         g.drawImage(myPlayer.getPlayer(), myPlayer.getRoomXCoordinate() * ROOM_SIZE, myPlayer.getRoomYCoordinate() * ROOM_SIZE, null);
+//        g.drawString("Current room:", 530, 150);
     }
 
     @Override
@@ -112,6 +115,18 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
 
     public Boolean getAtQuestion() {
         return isAtQuestion;
+    }
+
+    public void removeQuestionRoom() {
+        myMap.changeElement(myPlayer.getRoomYCoordinate(), myPlayer.getRoomXCoordinate(), 1);
+    }
+
+    public int getRoomXCoordinate() {
+        return myPlayer.getRoomXCoordinate();
+    }
+
+    public int getRoomYCoordinate() {
+        return myPlayer.getRoomYCoordinate();
     }
 
     /**

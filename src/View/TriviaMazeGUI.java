@@ -22,35 +22,55 @@ import java.util.concurrent.TimeUnit;
 
 public class TriviaMazeGUI extends JPanel {
 
-    /** The size of the frame. */
-    private static final Dimension FRAME_SIZE = new Dimension(1000, 600);
+    /**
+     * The size of the frame.
+     */
+    private static final Dimension FRAME_SIZE = new Dimension(800, 600);
 
-    /** Frame for the overall GUI. */
+    /**
+     * Frame for the overall GUI.
+     */
     private final JFrame myFrame;
 
-    /** Panel for the overall GUI. */
-    private QuestionPane myQuestionPanel;
+    /**
+     * Panel for the overall GUI.
+     */
+    private src.View.QuestionPane myQuestionPanel;
 
 
-    /** Panel for the overall GUI. */
-    private MazePanel maze;
+    /**
+     * Panel for the overall GUI.
+     */
+    private src.View.MazePanel maze;
 
-    /** The menu bar for the GUI. */
+    /**
+     * The menu bar for the GUI.
+     */
     private final JMenuBar myMenuBar;
 
-    /** The save menu item. */
+    /**
+     * The save menu item.
+     */
     private JMenuItem mySaveMenuItem;
 
-    /** The load menu item. */
+    /**
+     * The load menu item.
+     */
     private JMenuItem myLoadMenuItem;
 
-    /** The about menu item. */
+    /**
+     * The about menu item.
+     */
     private JMenuItem myAboutMenuItem;
 
-    /** The instruction menu item. */
+    /**
+     * The instruction menu item.
+     */
     private JMenuItem myInstructionsMenuItem;
 
-    /** The cheat menu item. */
+    /**
+     * The cheat menu item.
+     */
     private JMenuItem myCheatsMenuItem;
 
     /**
@@ -59,7 +79,7 @@ public class TriviaMazeGUI extends JPanel {
     public TriviaMazeGUI() {
         myFrame = new JFrame();
         ImageIcon img = new ImageIcon("TriviaMaze\\src\\Sprites\\mazeicon.png");
-        if (img.getIconHeight()==-1){
+        if (img.getIconHeight() == -1) {
             img = new ImageIcon("./src/Sprites/mazeicon.png");
         }
         myFrame.setIconImage(img.getImage());
@@ -69,22 +89,23 @@ public class TriviaMazeGUI extends JPanel {
         myFrame.setBackground(Color.BLACK);
         myFrame.add(myMenuBar, BorderLayout.NORTH);
         final QuestionAnswer[] question = {SQLHelper.getQuestionAnswer()};
-        myQuestionPanel = new QuestionPane(question[0]);
+        myQuestionPanel = new src.View.QuestionPane(question[0]);
         myQuestionPanel.setVisible(false);
         myFrame.add(myQuestionPanel, BorderLayout.EAST);
-        maze = new MazePanel();
+        maze = new src.View.MazePanel();
         final Boolean[] needNewQuestion = {true};
         myQuestionPanel.addChangeListener(new ChangeListener() {
             /** Called in response to slider events in this window. */
             @Override
             public void stateChanged(final ChangeEvent theEvent) {
                 System.out.println("myQuestionPanel theEvent: " + theEvent);
-                QuestionPane questionpane = (QuestionPane) theEvent.getSource();
+                src.View.QuestionPane questionpane = (src.View.QuestionPane) theEvent.getSource();
                 System.out.println("questionpane: " + questionpane.isAnsweredCorrect);
-                if(questionpane.isAnsweredCorrect){
+                if (questionpane.isAnsweredCorrect) {
                     maze.setCanPass(true);
-                needNewQuestion[0] = true;
-                }else if(!questionpane.isAnsweredCorrect){
+                    needNewQuestion[0] = true;
+                    maze.removeQuestionRoom();
+                } else if (!questionpane.isAnsweredCorrect) {
                     maze.setCanPass(false);
                     try {
                         TimeUnit.SECONDS.sleep(2);
@@ -103,13 +124,13 @@ public class TriviaMazeGUI extends JPanel {
             /** Called in response to slider events in this window. */
             @Override
             public void stateChanged(final ChangeEvent theEvent) {
-                if(!maze.getAtQuestion()){
+                if (!maze.getAtQuestion()) {
                     myQuestionPanel.setVisible(false);
                     needNewQuestion[0] = true;
-                }else{
+                } else {
                     maze.setCanPass(false);
                     myQuestionPanel.setVisible(true);
-                    if(question[0].getIsAnswered()){
+                    if (question[0].getIsAnswered()) {
                         maze.setCanPass(true);
                     }
 //                    else {if(!question[0].getIsAnswered()){
@@ -118,7 +139,7 @@ public class TriviaMazeGUI extends JPanel {
 //                    }
 //                    }
                 }
-                if(needNewQuestion[0]){
+                if (needNewQuestion[0]) {
                     question[0] = SQLHelper.getQuestionAnswer();
                     myQuestionPanel.updateQuestion(question[0]);
                     needNewQuestion[0] = false;
@@ -148,7 +169,6 @@ public class TriviaMazeGUI extends JPanel {
      */
     private JMenuBar createMenuBar() {
         final JMenuBar menuBar = new JMenuBar();
-        menuBar.setBackground(Color.LIGHT_GRAY);
         menuBar.add(createOptionsMenu(), BorderLayout.EAST);
         menuBar.add(createHelpMenu(), BorderLayout.EAST);
         return menuBar;
@@ -248,7 +268,7 @@ public class TriviaMazeGUI extends JPanel {
             public void mousePressed(MouseEvent event) {
                 final JOptionPane aboutPane = new JOptionPane();
                 aboutPane.showMessageDialog(new JFrame(), "This is the Trivia Maze Game\n",
-                      "About", JOptionPane.INFORMATION_MESSAGE);
+                        "About", JOptionPane.INFORMATION_MESSAGE);
             }
         });
     }
@@ -265,7 +285,7 @@ public class TriviaMazeGUI extends JPanel {
             public void mousePressed(MouseEvent event) {
                 final JOptionPane instructionsPane = new JOptionPane();
                 instructionsPane.showMessageDialog(new JFrame(), "Instructions: Play the game!\n",
-                      "Game Instructions: ", JOptionPane.INFORMATION_MESSAGE);
+                        "Game Instructions: ", JOptionPane.INFORMATION_MESSAGE);
             }
         });
     }
