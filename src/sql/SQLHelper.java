@@ -50,7 +50,7 @@ public class SQLHelper {
             System.exit(0);
         }
 
-        System.out.println( "Opened database successfully" );
+//        System.out.println( "Opened database successfully" );
         return null;
     }
 
@@ -67,19 +67,19 @@ public class SQLHelper {
               Statement stmt = conn.createStatement(); ) {
             int rv = stmt.executeUpdate( QuestionQuery );
             int rv2 = stmt.executeUpdate( AnswerQuery );
-            System.out.println( "executeUpdate() returned " + rv );
-            System.out.println( "executeUpdate() returned " + rv2 );
+//            System.out.println( "executeUpdate() returned " + rv );
+//            System.out.println( "executeUpdate() returned " + rv2 );
         } catch ( SQLException e ) {
             e.printStackTrace();
             System.exit( 0 );
         }
-        System.out.println( "Created questions table successfully" );
-        System.out.println( "Created answers table successfully" );
+//        System.out.println( "Created questions table successfully" );
+//        System.out.println( "Created answers table successfully" );
     }
 
     public static void addItemsToTable(SQLiteDataSource ds){
         //next insert two rows of data
-        System.out.println( "Attempting to insert two rows into questions table" );
+//        System.out.println( "Attempting to insert two rows into questions table" );
         String query1 = "INSERT INTO questions ( QUESTION ) VALUES ( 'Last name of Java creator?' )";
         String query2 = "INSERT INTO answers ( QUESTION_ID, ANSWER, IS_CORRECT ) VALUES ( 1, 'Gosling', 1 )";
 
@@ -89,15 +89,15 @@ public class SQLHelper {
         try ( Connection conn = ds.getConnection();
               Statement stmt = conn.createStatement(); ) {
             int rv = stmt.executeUpdate( query1 );
-            System.out.println( "1st executeUpdate() returned " + rv );
+//            System.out.println( "1st executeUpdate() returned " + rv );
             rv = stmt.executeUpdate( query2 );
             System.out.println( "2st executeUpdate() returned " + rv );
 
             rv = stmt.executeUpdate( query3 );
-            System.out.println( "3nd executeUpdate() returned " + rv );
+//            System.out.println( "3nd executeUpdate() returned " + rv );
 
             rv = stmt.executeUpdate( query4 );
-            System.out.println( "4nd executeUpdate() returned " + rv );
+//            System.out.println( "4nd executeUpdate() returned " + rv );
         } catch ( SQLException e ) {
             e.printStackTrace();
             System.exit( 0 );
@@ -107,7 +107,7 @@ public class SQLHelper {
     public static void getItems(SQLiteDataSource ds){
 
         //now query the database table for all its contents and display the results
-        System.out.println( "Selecting all rows from test table" );
+//        System.out.println( "Selecting all rows from test table" );
         String query = "SELECT * FROM questions";
 
         try ( Connection conn = ds.getConnection();
@@ -137,13 +137,12 @@ public class SQLHelper {
     public static QuestionAnswer getQuestionAnswer(SQLiteDataSource ds, Boolean isRandom){
 
         //now query the database table for all its contents and display the results
-        System.out.println( "Selecting all rows from test table" );
+//        System.out.println( "Selecting all rows from test table" );
 //        String query = "SELECT * FROM questions";
         int id = 5;
         if (isRandom){
             Random random = new Random();
             id = random.nextInt(19) + 1;
-            System.out.println("question id: " + id);
         }
         String query = String.format("SELECT QUESTION, ANSWER, IS_CORRECT\n" +
                 "FROM questions\n" +

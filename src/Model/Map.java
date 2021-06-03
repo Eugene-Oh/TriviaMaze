@@ -208,6 +208,6 @@ public class Map {
 
     public void changeElement(int y, int x, int roomValue) {
         myMap[y][x] = roomValue;
-        System.out.println(myMap[y][x]);
+//        System.out.println(myMap[y][x]);
     }
 }

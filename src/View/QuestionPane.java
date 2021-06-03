@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.concurrent.TimeUnit;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -30,9 +31,11 @@ import  src.Model.QuestionAnswer;
         public QuestionPane(QuestionAnswer question){
             setLayout(new GridBagLayout());
 
-            questiontext = new JLabel(question.getMyQuestion());
+            questiontext = new JLabel("<html>" + question.getMyQuestion() + "</html>");
+            questiontext.setPreferredSize(new Dimension(156,120));
             answerCorrect = new JLabel("Correct Answer!");
-            answerWrong = new JLabel(String.format("<html>Wrong Answer! <br> Correct answer was: %s </html>", question.getCorrectAnswer()));
+            answerWrong = new JLabel(String.format("<html>Wrong Answer! <br> Correct answer was: %s <br></html>", question.getCorrectAnswer()));
+            answerWrong.setPreferredSize(new Dimension(156,120));
 
             answerCorrect.setVisible(false);
             answerWrong.setVisible(false);
@@ -64,9 +67,12 @@ import  src.Model.QuestionAnswer;
         }
 
 
-        public void updateQuestion(QuestionAnswer question){
-            questiontext = new JLabel(question.getMyQuestion());
+        public void updateQuestion(QuestionAnswer question,Boolean wasWrong){
+            questiontext = new JLabel("<html>" + question.getMyQuestion() + "</html>");
+            questiontext.setPreferredSize(new Dimension(156,120));
+            JLabel oldAnswer = answerWrong;
             answerWrong = new JLabel(String.format("<html>Wrong Answer! <br> Correct answer was: %s </html>", question.getCorrectAnswer()));
+            answerWrong.setPreferredSize(new Dimension(156,120));
             answer1 = new JRadioButton(question.getAnswers()[0]);
             answer1.setActionCommand(question.getAnswers()[0]);
             answer2 = new JRadioButton(question.getAnswers()[1]);
@@ -79,6 +85,8 @@ import  src.Model.QuestionAnswer;
             bg=new ButtonGroup();
             bg.add(answer1);bg.add(answer2);bg.add(answer3);bg.add(answer4);
             box.removeAll();
+            box.add(oldAnswer);
+            box.add(new JLabel("\n"));
             box.add(questiontext);
             box.add(answer1);
             box.add(answer2);
@@ -86,6 +94,7 @@ import  src.Model.QuestionAnswer;
             box.add(answer4);
             box.add(answerCorrect);
             box.add(answerWrong);
+            oldAnswer.setVisible(wasWrong);
             answerCorrect.setVisible(false);
             answerWrong.setVisible(false);
             for( ActionListener al : button.getActionListeners() ) {
@@ -97,7 +106,6 @@ import  src.Model.QuestionAnswer;
             add(box);
             revalidate();
             repaint();
-            System.out.println("Question is updated!");
         }
 
         public ActionListener createActionListener(QuestionAnswer question){
@@ -105,11 +113,8 @@ import  src.Model.QuestionAnswer;
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if(question.isCorrectAnswer(bg.getSelection().getActionCommand())){
-                        System.out.println("Selected:" + e.getActionCommand());
-                        System.out.println("Selected:" + bg.getSelection().getActionCommand());
                         answerCorrect.setVisible(true);
                         isAnsweredCorrect = true;
-//                        box.setVisible(false);
                         question.setIsAnswered(true);
                     }else{
                         answerWrong.setVisible(true);
@@ -123,6 +128,7 @@ import  src.Model.QuestionAnswer;
                 }
             };
         }
+
         @Override
         public Dimension getPreferredSize() {
             return new Dimension(250, 250);
@@ -136,7 +142,7 @@ import  src.Model.QuestionAnswer;
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            System.out.println("event: " + evt);
+//            System.out.println("event: " + evt);
         }
 
         public void addChangeListener(ChangeListener listener) {

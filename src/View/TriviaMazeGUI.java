@@ -98,23 +98,15 @@ public class TriviaMazeGUI extends JPanel {
             /** Called in response to slider events in this window. */
             @Override
             public void stateChanged(final ChangeEvent theEvent) {
-                System.out.println("myQuestionPanel theEvent: " + theEvent);
                 src.View.QuestionPane questionpane = (src.View.QuestionPane) theEvent.getSource();
-                System.out.println("questionpane: " + questionpane.isAnsweredCorrect);
                 if (questionpane.isAnsweredCorrect) {
                     maze.setCanPass(true);
                     needNewQuestion[0] = true;
                     maze.removeQuestionRoom();
                 } else if (!questionpane.isAnsweredCorrect) {
                     maze.setCanPass(false);
-                    try {
-                        TimeUnit.SECONDS.sleep(2);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    System.out.println("slept");
                     question[0] = SQLHelper.getQuestionAnswer();
-                    myQuestionPanel.updateQuestion(question[0]);
+                    myQuestionPanel.updateQuestion(question[0], true);
                 }
 
             }
@@ -126,22 +118,16 @@ public class TriviaMazeGUI extends JPanel {
             public void stateChanged(final ChangeEvent theEvent) {
                 if (!maze.getAtQuestion()) {
                     myQuestionPanel.setVisible(false);
-                    needNewQuestion[0] = true;
                 } else {
                     maze.setCanPass(false);
                     myQuestionPanel.setVisible(true);
                     if (question[0].getIsAnswered()) {
                         maze.setCanPass(true);
                     }
-//                    else {if(!question[0].getIsAnswered()){
-////                        needNewQuestion[0] = true;
-//                        System.out.println("4");
-//                    }
-//                    }
                 }
                 if (needNewQuestion[0]) {
                     question[0] = SQLHelper.getQuestionAnswer();
-                    myQuestionPanel.updateQuestion(question[0]);
+                    myQuestionPanel.updateQuestion(question[0],false);
                     needNewQuestion[0] = false;
                 }
             }
