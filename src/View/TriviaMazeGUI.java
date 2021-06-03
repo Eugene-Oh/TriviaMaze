@@ -8,15 +8,15 @@ package src.View;
  */
 
 import src.Model.QuestionAnswer;
+import src.SaveLoad.LoadAction;
+import src.SaveLoad.SaveAction;
 import src.sql.SQLHelper;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.concurrent.TimeUnit;
 
 
@@ -188,12 +188,9 @@ public class TriviaMazeGUI extends JPanel {
         mySaveMenuItem = new JMenuItem("Save Game", KeyEvent.VK_C);
         mySaveMenuItem.setEnabled(true);
 
-        // Creates a mouse listener for the save game menu item.
-        mySaveMenuItem.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent event) {
-                if (mySaveMenuItem.isEnabled()) {
-                    // Add code here ---------------
-                }
+        mySaveMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                new SaveAction(maze);
             }
         });
     }
@@ -206,11 +203,9 @@ public class TriviaMazeGUI extends JPanel {
         myLoadMenuItem.setEnabled(true);
 
         // Creates a mouse listener for the load game menu item.
-        myLoadMenuItem.addMouseListener(new MouseAdapter() {
-            public void mousePressed(MouseEvent event) {
-                if (myLoadMenuItem.isEnabled()) {
-                    // Add code here ---------------
-                }
+        myLoadMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
+                new LoadAction(maze);
             }
         });
     }

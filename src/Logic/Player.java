@@ -2,8 +2,12 @@ package src.Logic;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 
-public class Player extends Rectangle {
+public class Player implements Serializable {
+
+    /** A generated serial version UID for object Serialization. */
+    private static final long serialVersionUID = 4874303903866067117L;
 
     /** The size of each room. */
     private static final int ROOM_SIZE = 45;
@@ -14,23 +18,14 @@ public class Player extends Rectangle {
     /** Current room X and Y-Coordinate. */
     private int roomX, roomY;
 
-    private Image player;
 
     public Player() {
-        ImageIcon img = new ImageIcon("TriviaMaze\\src\\Sprites\\player.png");
-        if (img.getIconHeight()==-1){
-            img = new ImageIcon("./src/Sprites/player.png");
-        }
-        Image playerImage = img.getImage();
-        player = playerImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
+
 
         roomX = PLAYER_START;
         roomY = PLAYER_START;
     }
 
-    public Image getPlayer() {
-        return player;
-    }
 
     public int getRoomXCoordinate() {
         return roomX;

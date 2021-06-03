@@ -9,9 +9,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 
 public class MazePanel extends JPanel implements ActionListener, KeyListener, PropertyChangeListener {
 
+    /** A generated serial version UID for object Serialization. */
     /**
      * The size of each room.
      */
@@ -81,7 +83,7 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
                 }
             }
         }
-        g.drawImage(myPlayer.getPlayer(), myPlayer.getRoomXCoordinate() * ROOM_SIZE, myPlayer.getRoomYCoordinate() * ROOM_SIZE, null);
+        g.drawImage(myMap.getPlayer(), myPlayer.getRoomXCoordinate() * ROOM_SIZE, myPlayer.getRoomYCoordinate() * ROOM_SIZE, null);
 //        g.drawString("Current room:", 530, 150);
     }
 
@@ -182,4 +184,12 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
     @Override
     public void keyReleased(KeyEvent e) {
     }
+
+    public Player getPlayer(){
+        return myPlayer;
+    };
+
+    public void setPlayer(Player thePlayer){
+        myPlayer = thePlayer;
+    };
 }
