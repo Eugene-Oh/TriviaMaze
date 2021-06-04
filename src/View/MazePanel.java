@@ -43,6 +43,11 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
      */
     private Boolean canPass = true;
 
+
+    private Boolean noClipActivated = false;
+
+
+
     /**
      * Sets up each component necessary.
      */
@@ -165,7 +170,8 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
                 }
                 if (myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate()) == 3) {
                     isAtQuestion = true;
-                } else {
+                }
+                else {
                     isAtQuestion = false;
                 }
             }
@@ -192,4 +198,13 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
     public void setPlayer(Player thePlayer){
         myPlayer = thePlayer;
     };
+
+    public Boolean getNoClipActivated() {
+        return noClipActivated;
+    }
+
+    public void setNoClipActivated(Boolean noClipActivated) {
+        this.noClipActivated = noClipActivated;
+    }
+
 }
