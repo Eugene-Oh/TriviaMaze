@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 public class TriviaMazeGUI extends JPanel {
 
+
     /**
      * The size of the frame.
      */
@@ -73,6 +74,8 @@ public class TriviaMazeGUI extends JPanel {
      */
     private JMenuItem myCheatsMenuItem;
 
+
+
     /**
      * Sets up the overall frame and adds its necessary components.
      */
@@ -116,19 +119,25 @@ public class TriviaMazeGUI extends JPanel {
             /** Called in response to slider events in this window. */
             @Override
             public void stateChanged(final ChangeEvent theEvent) {
-                if (!maze.getAtQuestion()) {
+
+                if (maze.getNoClipActivated() == true) {
+                    maze.setCanPass(true);
                     myQuestionPanel.setVisible(false);
                 } else {
-                    maze.setCanPass(false);
-                    myQuestionPanel.setVisible(true);
-                    if (question[0].getIsAnswered()) {
-                        maze.setCanPass(true);
+                    if (!maze.getAtQuestion()) {
+                        myQuestionPanel.setVisible(false);
+                    } else {
+                        maze.setCanPass(false);
+                        myQuestionPanel.setVisible(true);
+                        if (question[0].getIsAnswered()) {
+                            maze.setCanPass(true);
+                        }
                     }
-                }
-                if (needNewQuestion[0]) {
-                    question[0] = SQLHelper.getQuestionAnswer();
-                    myQuestionPanel.updateQuestion(question[0],false);
-                    needNewQuestion[0] = false;
+                    if (needNewQuestion[0]) {
+                        question[0] = SQLHelper.getQuestionAnswer();
+                        myQuestionPanel.updateQuestion(question[0], false);
+                        needNewQuestion[0] = false;
+                    }
                 }
             }
         });
@@ -248,7 +257,7 @@ public class TriviaMazeGUI extends JPanel {
              */
             public void mousePressed(MouseEvent event) {
                 final JOptionPane aboutPane = new JOptionPane();
-                aboutPane.showMessageDialog(new JFrame(), "This is the Trivia Maze Game\n",
+                aboutPane.showMessageDialog(new JFrame(), "<html>This is a Maze game where you must answer <br> Trivia questions from League of Legends to traverse through and escape.\n<html>",
                         "About", JOptionPane.INFORMATION_MESSAGE);
             }
         });
@@ -265,7 +274,10 @@ public class TriviaMazeGUI extends JPanel {
              */
             public void mousePressed(MouseEvent event) {
                 final JOptionPane instructionsPane = new JOptionPane();
-                instructionsPane.showMessageDialog(new JFrame(), "Instructions: Play the game!\n",
+                instructionsPane.showMessageDialog(new JFrame(), "<html>Instructions: Movement: Up (W) Down(S) Left(A) Right(D) <br> when you run into a wall, " +
+                            "you must answer a question on the right panel correctly to continue. " +
+                            "<br> Otherwise you will have a small time penalty to answer again." +
+                            "<br> Reach the finish line to win! \n<html>",
                         "Game Instructions: ", JOptionPane.INFORMATION_MESSAGE);
             }
         });
@@ -282,6 +294,8 @@ public class TriviaMazeGUI extends JPanel {
              */
             public void mousePressed(MouseEvent event) {
                 // Add code here ---------------
+                maze.setNoClipActivated(true);
+
             }
         });
     }
