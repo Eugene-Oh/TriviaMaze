@@ -9,20 +9,51 @@ import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.Serializable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class MazePanel extends JPanel implements ActionListener, KeyListener, PropertyChangeListener {
 
-    /** A generated serial version UID for object Serialization. */
     /**
      * The size of each room.
      */
     private static final int ROOM_SIZE = 45;
 
     /**
+     * The y-coordinate for the widgets below the maze.
+     */
+    private static final int Y_COORDINATE_INTERFACE = 590;
+
+    /**
      * Timer for painting.
      */
     private Timer myTimer;
+
+    /**
+     * Represents a second in the GUI.
+     */
+    private int myClockSeconds1;
+
+    /**
+     * Represents the next digit in seconds in the GUI.
+     */
+    private int myClockSeconds2;
+
+    /**
+     * Represents a minute in the GUI.
+     */
+    private int myClockMinute1;
+
+    /**
+     * Represents the next digit in minutes in the GUI.
+     */
+    private int myClockMinute2;
+
+    /**
+     * Used for the clock.
+     */
+    private ScheduledExecutorService executor;
 
     /**
      * Represents the player in the maze.
@@ -49,15 +80,26 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
 
 
     /**
+     * If the player has reached the finished line.
+     */
+    private Boolean isFinished;
+
+    /**
      * Sets up each component necessary.
      */
     public MazePanel() {
+        myClockSeconds1 = 0;
+        myClockSeconds1 = 0;
+        myClockMinute1 = 0;
+        myClockMinute2 = 0;
+        isFinished = false;
         myTimer = new Timer(25, this);
         myPlayer = new Player();
         myMap = new src.Model.Map();
         addKeyListener(new Movement());
         setFocusable(true);
         myTimer.start();
+        clock();
     }
 
     /**
@@ -89,7 +131,53 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
             }
         }
         g.drawImage(myMap.getPlayer(), myPlayer.getRoomXCoordinate() * ROOM_SIZE, myPlayer.getRoomYCoordinate() * ROOM_SIZE, null);
-//        g.drawString("Current room:", 530, 150);
+
+        // Creates the current room interface.
+        g.setFont(new Font("TimesRoman", Font.PLAIN, 25));
+        g.drawString("Current room:", 40, Y_COORDINATE_INTERFACE);
+        if (myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate()) == 1) {
+            g.drawImage(myMap.getSand(), 200, Y_COORDINATE_INTERFACE - 30, this);
+        } else if (myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate()) == 3) {
+            g.drawImage(myMap.getQuestion(), 200, Y_COORDINATE_INTERFACE - 30, this);
+        } else if (myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate()) == 4) {
+            g.drawImage(myMap.getFinish(), 200, Y_COORDINATE_INTERFACE - 30, this);
+        }
+
+        // Creates the timer.
+        g.drawString("Elapsed Time:", 300, Y_COORDINATE_INTERFACE);
+        g.drawString(String.valueOf(myClockSeconds1), 514, Y_COORDINATE_INTERFACE);
+        g.drawString(String.valueOf(myClockSeconds2), 500, Y_COORDINATE_INTERFACE);
+        g.drawString(":", 495, Y_COORDINATE_INTERFACE);
+        g.drawString(String.valueOf(myClockMinute1), 482, Y_COORDINATE_INTERFACE);
+        g.drawString(String.valueOf(myClockMinute2), 468, Y_COORDINATE_INTERFACE);
+    }
+
+    public void clock() {
+        executor = Executors.newScheduledThreadPool(1);
+        Runnable run = new Runnable() {
+            @Override
+            public void run() {
+                myClockSeconds1 = myClockSeconds1 + 1;
+                if (myClockSeconds1 > 9) {
+                    myClockSeconds1 = 0;
+                    myClockSeconds2 = myClockSeconds2 + 1;
+                }
+                if (myClockSeconds2 > 5) {
+                    myClockSeconds1 = 0;
+                    myClockSeconds2 = 0;
+                    myClockMinute1 = myClockMinute1 + 1;
+                }
+                if (myClockMinute1 > 9) {
+                    myClockMinute1 = 0;
+                    myClockMinute2 = myClockMinute2 + 1;
+                }
+                if (myClockMinute2 > 5) {
+                    myClockMinute1 = 0;
+                    myClockMinute2 = 0;
+                }
+            }
+        };
+        executor.scheduleAtFixedRate(run, 0, 1, TimeUnit.SECONDS);
     }
 
     @Override
@@ -149,9 +237,8 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
          * 3 = QUESTION
          */
         public void keyPressed(KeyEvent e) {
-            // ADD CODE FOR HANDLING QUESTIONS HERE!
             int keycode = e.getKeyCode();
-            if (canPass) {
+            if (canPass && !isFinished) {
                 if (keycode == KeyEvent.VK_W && (!(myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate() - 1) == 0) &&
                         !(myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate() - 1) == 2))) {
                     myPlayer.move(0, -1);
@@ -174,6 +261,11 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
                 else {
                     isAtQuestion = false;
                 }
+                // If at finish line.
+                if (myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate()) == 4) {
+                    executor.shutdown();
+                    isFinished = true;
+                }
             }
             fireChangeListeners();
         }
@@ -191,13 +283,13 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
     public void keyReleased(KeyEvent e) {
     }
 
-    public Player getPlayer(){
+    public Player getPlayer() {
         return myPlayer;
-    };
+    }
 
-    public void setPlayer(Player thePlayer){
+    public void setPlayer(Player thePlayer) {
         myPlayer = thePlayer;
-    };
+    }
 
     public Boolean getNoClipActivated() {
         return noClipActivated;

@@ -26,7 +26,7 @@ public class TriviaMazeGUI extends JPanel {
     /**
      * The size of the frame.
      */
-    private static final Dimension FRAME_SIZE = new Dimension(800, 600);
+    private static final Dimension FRAME_SIZE = new Dimension(800, 700);
 
     /**
      * Frame for the overall GUI.
@@ -77,6 +77,11 @@ public class TriviaMazeGUI extends JPanel {
 
 
     /**
+     * The amount of questions answered right by the user.
+     */
+    private int myQuestionsAnsweredRight;
+
+    /**
      * Sets up the overall frame and adds its necessary components.
      */
     public TriviaMazeGUI() {
@@ -85,11 +90,11 @@ public class TriviaMazeGUI extends JPanel {
         if (img.getIconHeight() == -1) {
             img = new ImageIcon("./src/Sprites/mazeicon.png");
         }
+
         myFrame.setIconImage(img.getImage());
         myMenuBar = createMenuBar();
         myFrame.setTitle("TriviaMaze");
         myFrame.setPreferredSize(FRAME_SIZE);
-        myFrame.setBackground(Color.BLACK);
         myFrame.add(myMenuBar, BorderLayout.NORTH);
         final QuestionAnswer[] question = {SQLHelper.getQuestionAnswer()};
         myQuestionPanel = new src.View.QuestionPane(question[0]);
@@ -141,10 +146,8 @@ public class TriviaMazeGUI extends JPanel {
                 }
             }
         });
-
         myFrame.add(maze);
         start();
-
     }
 
     /**

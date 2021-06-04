@@ -1,8 +1,5 @@
 package src.View;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GridBagLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -131,7 +128,7 @@ import  src.Model.QuestionAnswer;
 
         @Override
         public Dimension getPreferredSize() {
-            return new Dimension(250, 250);
+            return new Dimension(240, 250);
         }
 
         protected void paintComponent(Graphics g) {
