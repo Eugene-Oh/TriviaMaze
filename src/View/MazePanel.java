@@ -2,13 +2,17 @@ package src.View;
 
 import src.Logic.Player;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -85,6 +89,20 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
     private Boolean isFinished;
 
     /**
+     * Coordinates of player sprite.
+     */
+    private final int[][] spriteSheetCoords = { { 0, 0, 32, 41 }, { 32, 0, 32, 41 }, { 64, 0, 32, 41 },
+                                                { 0, 41, 32, 41 }, { 32, 41, 32, 41 }, { 64, 41, 32, 41 },
+                                                { 0, 82, 32, 41 }, { 32, 82, 32, 41 }, { 64, 82, 32, 41 },
+                                                { 0, 123, 32, 41 }, { 32, 123, 32, 41 }, { 64, 123, 32, 41 }};
+
+    private int spriteValue=0;
+    private int spriteStart=0;
+    private int spriteEnd=11;
+    private Boolean shouldAnimate=false;
+    BufferedImage img=null;
+
+    /**
      * Sets up each component necessary.
      */
     public MazePanel() {
@@ -100,6 +118,15 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
         setFocusable(true);
         myTimer.start();
         clock();
+
+        try {
+            img = ImageIO.read(new File("./src/Sprites/yasuo.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Timer timer = new Timer(25, actionListener);
+        timer.setInitialDelay(0);
+        timer.start();
     }
 
     /**
@@ -130,7 +157,10 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
                 }
             }
         }
-        g.drawImage(myMap.getPlayer(), myPlayer.getRoomXCoordinate() * ROOM_SIZE, myPlayer.getRoomYCoordinate() * ROOM_SIZE, null);
+
+        Image subSprite = img.getSubimage(spriteSheetCoords[spriteValue][0], spriteSheetCoords[spriteValue][1], spriteSheetCoords[spriteValue][2], spriteSheetCoords[spriteValue][3]);
+        g.drawImage(subSprite, myPlayer.getRoomXCoordinate() * ROOM_SIZE+6, myPlayer.getRoomYCoordinate() * ROOM_SIZE, null);
+
 
         // Creates the current room interface.
         g.setFont(new Font("TimesRoman", Font.PLAIN, 25));
@@ -241,19 +271,19 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
             if (canPass && !isFinished) {
                 if (keycode == KeyEvent.VK_W && (!(myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate() - 1) == 0) &&
                         !(myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate() - 1) == 2))) {
-                    myPlayer.move(0, -1);
+                    animatePlayer(0, -1);
                 }
                 if (keycode == KeyEvent.VK_S && (!(myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate() + 1) == 0) &&
                         !(myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate() + 1) == 2))) {
-                    myPlayer.move(0, 1);
+                    animatePlayer(0, 1);
                 }
                 if (keycode == KeyEvent.VK_A && !(myMap.getMapRoom(myPlayer.getRoomXCoordinate() - 1, myPlayer.getRoomYCoordinate()) == 0) &&
                         !(myMap.getMapRoom(myPlayer.getRoomXCoordinate() - 1, myPlayer.getRoomYCoordinate()) == 2)) {
-                    myPlayer.move(-1, 0);
+                    animatePlayer(-1, 0);
                 }
                 if (keycode == KeyEvent.VK_D && (!(myMap.getMapRoom(myPlayer.getRoomXCoordinate() + 1, myPlayer.getRoomYCoordinate()) == 0) &&
                         !(myMap.getMapRoom(myPlayer.getRoomXCoordinate() + 1, myPlayer.getRoomYCoordinate()) == 2))) {
-                    myPlayer.move(1, 0);
+                    animatePlayer(1, 0);
                 }
                 if (myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate()) == 3) {
                     isAtQuestion = true;
@@ -261,6 +291,7 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
                 else {
                     isAtQuestion = false;
                 }
+                spriteValue = spriteStart;
                 // If at finish line.
                 if (myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate()) == 4) {
                     executor.shutdown();
@@ -299,4 +330,40 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
         this.noClipActivated = noClipActivated;
     }
 
+    private ActionListener actionListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            if(shouldAnimate){
+                if (spriteValue == spriteEnd) {
+                    spriteValue = spriteStart;
+                }
+                spriteValue = spriteValue+1;
+                shouldAnimate=false;
+            }else{
+                spriteValue=1;
+            }
+
+            revalidate();
+            repaint();
+        }
+    };
+
+    private void animatePlayer(int x, int y){
+        if(x==0 && y==1){
+            spriteStart=0;
+            spriteEnd=2;
+        }else if(x==-1 && y==0){
+            spriteStart=3;
+            spriteEnd=5;
+        }else if(x==1 && y==0){
+            spriteStart=6;
+            spriteEnd=8;
+        }else if(x==0&& y==-1){
+            spriteStart=9;
+            spriteEnd=11;
+        }
+        shouldAnimate=true;
+        myPlayer.move(x, y);
+    }
 }
