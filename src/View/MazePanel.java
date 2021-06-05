@@ -120,7 +120,11 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
         clock();
 
         try {
-            img = ImageIO.read(new File("./src/Sprites/yasuo.png"));
+            File yasuoFile =new File("TriviaMaze\\src\\Sprites\\yasuo.png");
+            if (!yasuoFile.isFile()){
+                yasuoFile = new File("./src/Sprites/yasuo.png");
+            }
+            img = ImageIO.read(yasuoFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
