@@ -106,10 +106,6 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
      * Sets up each component necessary.
      */
     public MazePanel() {
-        myClockSeconds1 = 0;
-        myClockSeconds1 = 0;
-        myClockMinute1 = 0;
-        myClockMinute2 = 0;
         isFinished = false;
         myTimer = new Timer(25, this);
         myPlayer = new Player();
@@ -117,6 +113,10 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
         addKeyListener(new Movement());
         setFocusable(true);
         myTimer.start();
+        myClockSeconds1 = myPlayer.getSecond1();
+        myClockSeconds1 = myPlayer.getSecond2();
+        myClockMinute1 = myPlayer.getMinute1();
+        myClockMinute2 = myPlayer.getMinute2();
         clock();
 
         try {
@@ -165,7 +165,6 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
         Image subSprite = img.getSubimage(spriteSheetCoords[spriteValue][0], spriteSheetCoords[spriteValue][1], spriteSheetCoords[spriteValue][2], spriteSheetCoords[spriteValue][3]);
         g.drawImage(subSprite, myPlayer.getRoomXCoordinate() * ROOM_SIZE+6, myPlayer.getRoomYCoordinate() * ROOM_SIZE, null);
 
-
         // Creates the current room interface.
         g.setFont(new Font("TimesRoman", Font.PLAIN, 25));
         g.drawString("Current room:", 40, Y_COORDINATE_INTERFACE);
@@ -212,6 +211,7 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
             }
         };
         executor.scheduleAtFixedRate(run, 0, 1, TimeUnit.SECONDS);
+        myPlayer.setClock(myClockSeconds1, myClockSeconds2, myClockMinute1, myClockMinute2);
     }
 
     @Override
@@ -300,6 +300,9 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
                 if (myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate()) == 4) {
                     executor.shutdown();
                     isFinished = true;
+                    final JOptionPane aboutPane = new JOptionPane();
+                    aboutPane.showMessageDialog(new JFrame(), "You have finished the maze!",
+                            "Finished", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
             fireChangeListeners();
