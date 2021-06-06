@@ -119,9 +119,9 @@ public class Map implements Serializable {
         Image finishImage = img.getImage();
         myFinish = finishImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
 
-        img = new ImageIcon("TriviaMaze\\src\\Sprites\\player.png");
+        img = new ImageIcon("TriviaMaze\\src\\Sprites\\yasuo.png");
         if (img.getIconHeight()==-1){
-            img = new ImageIcon("./src/Sprites/player.png");
+            img = new ImageIcon("./src/Sprites/yasuo.png");
         }
         Image playerImage = img.getImage();
         player = playerImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);

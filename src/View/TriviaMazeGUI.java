@@ -19,9 +19,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.concurrent.TimeUnit;
 
-
 public class TriviaMazeGUI extends JPanel {
-
 
     /**
      * The size of the frame.
@@ -74,12 +72,20 @@ public class TriviaMazeGUI extends JPanel {
      */
     private JMenuItem myCheatsMenuItem;
 
-
-
     /**
      * The amount of questions answered right by the user.
      */
     private int myQuestionsAnsweredRight;
+
+    /**
+     * The amount of questions answered wrong by the user.
+     */
+    private int myQuestionsAnsweredWrong;
+
+    /**
+     * The total mount of questions answered.
+     */
+    private int myQuestionsAnsweredTotal;
 
     /**
      * Sets up the overall frame and adds its necessary components.
@@ -96,12 +102,29 @@ public class TriviaMazeGUI extends JPanel {
         myFrame.setTitle("TriviaMaze");
         myFrame.setPreferredSize(FRAME_SIZE);
         myFrame.add(myMenuBar, BorderLayout.NORTH);
+        JPanel eastPanel = new JPanel(new GridLayout(2, 0));
+
+        src.View.QuestionsAnsweredCounter counter = new src.View.QuestionsAnsweredCounter();
+
+
+        JPanel northEastPanel = new JPanel();
+
+        counter.setPreferredSize(new Dimension(240,240));
+        eastPanel.setPreferredSize(new Dimension(245,240));
+        eastPanel.setVisible(true);
+
+        counter.setVisible(true);
         final QuestionAnswer[] question = {SQLHelper.getQuestionAnswer()};
         myQuestionPanel = new src.View.QuestionPane(question[0]);
         myQuestionPanel.setVisible(false);
-        myFrame.add(myQuestionPanel, BorderLayout.EAST);
+
+        eastPanel.add(myQuestionPanel, "North");
+        eastPanel.add(counter, "South");
+        revalidate();
+        repaint();
         maze = new src.View.MazePanel();
         final Boolean[] needNewQuestion = {true};
+        myQuestionsAnsweredRight = 0;
         myQuestionPanel.addChangeListener(new ChangeListener() {
             /** Called in response to slider events in this window. */
             @Override
@@ -111,10 +134,16 @@ public class TriviaMazeGUI extends JPanel {
                     maze.setCanPass(true);
                     needNewQuestion[0] = true;
                     maze.removeQuestionRoom();
+                    counter.myQuestionsAnsweredRightAdd();
+                    counter.myQuestionsAnsweredTotalAdd();
+                    counter.repaint();
                 } else if (!questionpane.isAnsweredCorrect) {
                     maze.setCanPass(false);
                     question[0] = SQLHelper.getQuestionAnswer();
                     myQuestionPanel.updateQuestion(question[0], true);
+                    counter.myQuestionsAnsweredWrongAdd();
+                    counter.myQuestionsAnsweredTotalAdd();
+                    counter.repaint();
                 }
 
             }
@@ -147,6 +176,8 @@ public class TriviaMazeGUI extends JPanel {
             }
         });
         myFrame.add(maze);
+        myFrame.add(eastPanel,BorderLayout.EAST);
+
         start();
     }
 
@@ -278,9 +309,9 @@ public class TriviaMazeGUI extends JPanel {
             public void mousePressed(MouseEvent event) {
                 final JOptionPane instructionsPane = new JOptionPane();
                 instructionsPane.showMessageDialog(new JFrame(), "<html>Instructions: Movement: Up (W) Down(S) Left(A) Right(D) <br> when you run into a wall, " +
-                            "you must answer a question on the right panel correctly to continue. " +
-                            "<br> Otherwise you will have a small time penalty to answer again." +
-                            "<br> Reach the finish line to win! \n<html>",
+                                "you must answer a question on the right panel correctly to continue. " +
+                                "<br> Otherwise you will have a small time penalty to answer again." +
+                                "<br> Reach the finish line to win! \n<html>",
                         "Game Instructions: ", JOptionPane.INFORMATION_MESSAGE);
             }
         });
