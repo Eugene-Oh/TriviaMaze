@@ -12,19 +12,55 @@ import javax.swing.event.ChangeListener;
 import  src.Model.QuestionAnswer;
 
     public class QuestionPane extends JPanel implements PropertyChangeListener{
-
+        /**
+         * JLabel that contains the question.
+         */
         JLabel questiontext;
+        /**
+         * JLabel that contains the correct answer.
+         */
         JLabel answerCorrect;
+        /**
+         * JLabel that contains the wrong answer.
+         */
         JLabel answerWrong;
+        /**
+         * JLabel that contains the answer 1.
+         */
         JRadioButton answer1;
+        /**
+         * JLabel that contains the answer 2.
+         */
         JRadioButton answer2;
+        /**
+         * JLabel that contains the answer 3.
+         */
         JRadioButton answer3;
+        /**
+         * JLabel that contains the answer 4.
+         */
         JRadioButton answer4;
+        /**
+         * JButton for our button.
+         */
         JButton button;
+        /**
+         * ButtonGroup.
+         */
         ButtonGroup bg;
+        /**
+         * Box.
+         */
         Box box;
+        /**
+         * Boolean value for whether the question is answered correctly or not.
+         */
         Boolean isAnsweredCorrect = false;
 
+        /**
+         * Constructor for QuestionPane.
+         * @param question question.
+         */
         public QuestionPane(QuestionAnswer question){
             setLayout(new GridBagLayout());
 
@@ -63,7 +99,11 @@ import  src.Model.QuestionAnswer;
             add(box);
         }
 
-
+        /**
+         * Updates the questions
+         * @param question question.
+         * @param wasWrong Boolean for whether the question was wrong or not.
+         */
         public void updateQuestion(QuestionAnswer question,Boolean wasWrong){
             questiontext = new JLabel("<html>" + question.getMyQuestion() + "</html>");
             questiontext.setPreferredSize(new Dimension(156,120));
@@ -105,6 +145,11 @@ import  src.Model.QuestionAnswer;
             repaint();
         }
 
+        /**
+         * Creates a Action Listener.
+         * @param question question.
+         * @return question.
+         */
         public ActionListener createActionListener(QuestionAnswer question){
             return new ActionListener() {
                 @Override
@@ -131,6 +176,10 @@ import  src.Model.QuestionAnswer;
             return new Dimension(240, 250);
         }
 
+        /**
+         * Paint Component.
+         * @param g Graphics.
+         */
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             Graphics2D g2d = (Graphics2D) g.create();
@@ -142,18 +191,30 @@ import  src.Model.QuestionAnswer;
 //            System.out.println("event: " + evt);
         }
 
+        /**
+         * Adds a change listener.
+         * @param listener the listener you want to change to.
+         */
         public void addChangeListener(ChangeListener listener) {
             listenerList.add(ChangeListener.class, listener);
         }
-
+        /**
+         * Removes a change listener.
+         * @param listener the listener you want to change to.
+         */
         public void removeChangeListener(ChangeListener listener) {
             listenerList.remove(ChangeListener.class, listener);
         }
-
+        /**
+         * Getter for ChangeListeners.
+         * @return ChangeListener.
+         */
         public ChangeListener[] getChangeListeners() {
             return listenerList.getListeners(ChangeListener.class);
         }
-
+        /**
+         * Fires the change listeners.
+         */
         protected void fireChangeListeners() {
             ChangeEvent event = new ChangeEvent(this);
             for (ChangeListener listener : getChangeListeners()) {

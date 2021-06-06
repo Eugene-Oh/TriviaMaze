@@ -67,17 +67,29 @@ public class Map implements Serializable {
      * The y-coordinate of the current room the player is on.
      */
     private int currentY;
-
+    /**
+     * Image for the grass of the maze.
+     */
     private Image myGrass;
-
+    /**
+     * Image for the sand of the maze.
+     */
     private Image mySand;
-
+    /**
+     * Image for the walls of the maze.
+     */
     private Image myWall;
-
+    /**
+     * Image for the question blocks of the maze.
+     */
     private Image myQuestion;
-
+    /**
+     * Image for the finish block of the maze.
+     */
     private Image myFinish;
-
+    /**
+     * Image for the player of the maze.
+     */
     private Image player;
 
     /**
@@ -134,26 +146,45 @@ public class Map implements Serializable {
         currentY = 0;
     }
 
+    /**
+     * Getter for the image of the Grass.
+     * @return Image of grass.
+     */
     public Image getGrass(){
         return myGrass;
     }
-
+    /**
+     * Getter for the image of the Sand.
+     * @return Image of Sand.
+     */
     public Image getSand(){
         return mySand;
     }
-
+    /**
+     * Getter for the image of the Wall.
+     * @return Image of Wall.
+     */
     public Image getWall(){
         return myWall;
     }
-
+    /**
+     * Getter for the question.
+     * @return question.
+     */
     public Image getQuestion() {
         return myQuestion;
     }
-
+    /**
+     * Getter for image of the finish line.
+     * @return Image of finish line.
+     */
     public Image getFinish() {
         return myFinish;
     }
-
+    /**
+     * Getter for image of the player.
+     * @return Image of player.
+     */
     public Image getPlayer() {
         return player;
     }
@@ -223,6 +254,12 @@ public class Map implements Serializable {
         return myMap[y][x];
     }
 
+    /**
+     * Changes the element.
+     * @param y value.
+     * @param x value.
+     * @param roomValue value for the room.
+     */
     public void changeElement(int y, int x, int roomValue) {
         myMap[y][x] = roomValue;
 //        System.out.println(myMap[y][x]);

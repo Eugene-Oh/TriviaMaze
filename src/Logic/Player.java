@@ -39,6 +39,9 @@ public class Player implements Serializable {
     private int myClockMinute2;
 
 
+    /**
+     * Default constructor.
+     */
     public Player() {
         roomX = PLAYER_START;
         roomY = PLAYER_START;
@@ -48,15 +51,28 @@ public class Player implements Serializable {
         myClockMinute2 = 0;
     }
 
-
+    /**
+     * Getter for Room's X Coordinate.
+     * @return roomX The X coordinate for the room the player is currently in.
+     */
     public int getRoomXCoordinate() {
         return roomX;
     }
-
+    /**
+     * Getter for Room's Y Coordinate.
+     * @return roomX The Y coordinate for the room the player is currently in.
+     */
     public int getRoomYCoordinate() {
         return roomY;
     }
 
+    /**
+     * Setter/Sets the clock.
+     * @param theSecond1 First value that represents a second of the clock.
+     * @param theSecond2 Second value that represents a second of the clock.
+     * @param theMinute1 First value that represents a minute of the clock.
+     * @param theMinute2 Second value that represents a minute of the clock.
+     */
     public void setClock (int theSecond1, int theSecond2, int theMinute1, int theMinute2) {
         myClockSeconds1 = theSecond1;
         myClockSeconds2 = theSecond2;
@@ -64,22 +80,40 @@ public class Player implements Serializable {
         myClockMinute2 = theMinute2;
     }
 
+    /**
+     * Getter for Second 1.
+     * @return First value that represents a second of the clock.
+     */
     public int getSecond1() {
         return myClockSeconds1;
     }
-
+    /**
+     * Getter for Second 2.
+     * @return Second value that represents a seconds of the clock.
+     */
     public int getSecond2() {
         return myClockSeconds2;
     }
-
+    /**
+     * Getter for Minute 1.
+     * @return First value that represents a minutes of the clock.
+     */
     public int getMinute1() {
         return myClockMinute1;
     }
-
+    /**
+     * Getter for Second 2.
+     * @return Second value that represents a minutes of the clock.
+     */
     public int getMinute2() {
         return myClockMinute2;
     }
 
+    /**
+     * Moves the player.
+     * @param dx directional x value.
+     * @param dy directional y value.
+     */
     public void move(int dx, int dy) {
         roomX += dx;
         roomY += dy;

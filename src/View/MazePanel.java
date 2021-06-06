@@ -185,6 +185,9 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
         g.drawString(String.valueOf(myClockMinute2), 468, Y_COORDINATE_INTERFACE);
     }
 
+    /**
+     * Method that handles the game clock.
+     */
     public void clock() {
         executor = Executors.newScheduledThreadPool(1);
         Runnable run = new Runnable() {
@@ -219,18 +222,32 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
 
     }
 
+    /**
+     * Adds a change listener.
+     * @param listener the listener you want to change to.
+     */
     public void addChangeListener(ChangeListener listener) {
         listenerList.add(ChangeListener.class, listener);
     }
-
+    /**
+     * Removes a change listener.
+     * @param listener the listener you want to change to.
+     */
     public void removeChangeListener(ChangeListener listener) {
         listenerList.remove(ChangeListener.class, listener);
     }
 
+    /**
+     * Getter for ChangeListeners.
+     * @return ChangeListener.
+     */
     public ChangeListener[] getChangeListeners() {
         return listenerList.getListeners(ChangeListener.class);
     }
 
+    /**
+     * Fires the change listeners.
+     */
     protected void fireChangeListeners() {
         ChangeEvent event = new ChangeEvent(this);
         for (ChangeListener listener : getChangeListeners()) {
@@ -238,22 +255,40 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
         }
     }
 
+    /**
+     * Sets boolean value for if the player can pass or not.
+     * @param canPass boolean value for if the player can pass or not.
+     */
     public void setCanPass(Boolean canPass) {
         this.canPass = canPass;
     }
 
+    /**
+     * Getter for boolean whether the player is sitting at a question block or not.
+     * @return boolean whether the player is sitting at a question block or not.
+     */
     public Boolean getAtQuestion() {
         return isAtQuestion;
     }
 
+    /**
+     * Removes a question room.
+     */
     public void removeQuestionRoom() {
         myMap.changeElement(myPlayer.getRoomYCoordinate(), myPlayer.getRoomXCoordinate(), 1);
     }
 
+    /**
+     * Getter for the room's x coordinate.
+     * @return room's x coordinate.
+     */
     public int getRoomXCoordinate() {
         return myPlayer.getRoomXCoordinate();
     }
-
+    /**
+     * Getter for the room's y coordinate.
+     * @return room's y coordinate.
+     */
     public int getRoomYCoordinate() {
         return myPlayer.getRoomYCoordinate();
     }
@@ -320,23 +355,40 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
     @Override
     public void keyReleased(KeyEvent e) {
     }
-
+    /**
+     * Getter for the player.
+     * @return the Player.
+     */
     public Player getPlayer() {
         return myPlayer;
     }
 
+    /**
+     * Setter for the player
+     * @param thePlayer the player.
+     */
     public void setPlayer(Player thePlayer) {
         myPlayer = thePlayer;
     }
-
+    /**
+     * Getter for boolean value whether no clip is activated or not.
+     * @return boolean value whether no clip is activated or not.
+     */
     public Boolean getNoClipActivated() {
         return noClipActivated;
     }
 
+    /**
+     * Setter for the noClip.
+     * @param noClipActivated boolean value whether no clip is activated or not.
+     */
     public void setNoClipActivated(Boolean noClipActivated) {
         this.noClipActivated = noClipActivated;
     }
 
+    /**
+     * Action listener.
+     */
     private ActionListener actionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -356,6 +408,11 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
         }
     };
 
+    /**
+     * Animates the player.
+     * @param x x value.
+     * @param y y value.
+     */
     private void animatePlayer(int x, int y){
         if(x==0 && y==1){
             spriteStart=0;
