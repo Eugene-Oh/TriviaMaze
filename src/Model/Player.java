@@ -12,11 +12,6 @@ public class Player implements Serializable {
     private static final long serialVersionUID = 4874303903866067117L;
 
     /**
-     * The size of each room.
-     */
-    private static final int ROOM_SIZE = 45;
-
-    /**
      * Starting room for the player.
      */
     private static final int PLAYER_START = 1;

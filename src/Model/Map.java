@@ -54,25 +54,8 @@ public class Map implements Serializable {
             {2, 0, 1, 1, 3, 1, 1, 1, 1, 1, 4, 2},
             {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2}};
 
-    /**
-     * The height of the map.
-     */
-    final private int myHeight;
 
-    /**
-     * The length of the map.
-     */
-    final private int myLength;
 
-    /**
-     * The x-coordinate of the current room the player is on.
-     */
-    private int currentX;
-
-    /**
-     * The y-coordinate of the current room the player is on.
-     */
-    private int currentY;
     /**
      * Image for the grass of the maze.
      */
@@ -144,12 +127,6 @@ public class Map implements Serializable {
         Image playerImage = img.getImage();
         player = playerImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE, java.awt.Image.SCALE_SMOOTH);
 
-
-        myHeight = MAZE_SIZE;
-        myLength = MAZE_SIZE;
-//        myMap = new int[DEFAULT_SIZE][DEFAULT_SIZE];
-        currentX = 0;
-        currentY = 0;
     }
 
     /**
@@ -206,15 +183,14 @@ public class Map implements Serializable {
         return player;
     }
 
+
     /**
-     * Setter method for the player's current coordinates.
+     * Getter for maze Size.
      *
-     * @param theX The x-coordinate of the player.
-     * @param theY The y-coordinate of the player.
+     * @return size of the maze.
      */
-    public void setCoordinates(final int theX, final int theY) {
-        currentX = theX;
-        currentY = theY;
+    public static int getMazeSize() {
+        return MAZE_SIZE;
     }
 
     /**
@@ -226,41 +202,13 @@ public class Map implements Serializable {
         return myMap[y][x];
     }
 
-    /**
-     * Returns the length of the map.
-     *
-     * @return The length.
-     */
-    public int getLength() {
-        return myLength;
-    }
-
-    /**
-     * Returns the height of the map.
-     *
-     * @return The height.
-     */
-    public int getHeight() {
-        return myHeight;
-    }
 
     /**
      * Returns the player's current x-coordinate.
      *
      * @return The x-coordinatex
      */
-    public int getX() {
-        return currentX;
-    }
 
-    /**
-     * Returns the player's current y-coordinate.
-     *
-     * @return The y-coordinate.
-     */
-    public int getY() {
-        return currentY;
-    }
 
     /**
      * Returns the element in the designated spot in the array.

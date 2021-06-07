@@ -146,8 +146,8 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
      */
     public void paint(Graphics g) {
         super.paint(g);
-        for (int i = 0; i < myMap.getLength(); i++) {
-            for (int j = 0; j < myMap.getHeight(); j++) {
+        for (int i = 0; i < myMap.getMazeSize(); i++) {
+            for (int j = 0; j < myMap.getMazeSize(); j++) {
                 if (myMap.getElement(i, j) == 0) {
                     g.drawImage(myMap.getGrass(), j * ROOM_SIZE, i * ROOM_SIZE, null);
                 } else if (myMap.getElement(i, j) == 1) {
