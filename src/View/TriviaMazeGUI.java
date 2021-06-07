@@ -11,6 +11,7 @@ import src.Model.QuestionAnswer;
 import src.SaveLoad.LoadAction;
 import src.SaveLoad.SaveAction;
 import src.sql.SQLHelper;
+import src.View.QuestionsAnsweredCounter;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -104,7 +105,7 @@ public class TriviaMazeGUI extends JPanel {
         myFrame.add(myMenuBar, BorderLayout.NORTH);
         JPanel eastPanel = new JPanel(new GridLayout(2, 0));
 
-        src.View.QuestionsAnsweredCounter counter = new src.View.QuestionsAnsweredCounter();
+        QuestionsAnsweredCounter counter = new src.View.QuestionsAnsweredCounter();
 
 
         JPanel northEastPanel = new JPanel();
