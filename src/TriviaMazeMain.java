@@ -1,4 +1,4 @@
-package src.View;
+package src;
 
 /**
  * This class will start the Trivia Maze GUI.
@@ -9,7 +9,7 @@ package src.View;
 
 import java.awt.EventQueue;
 
-public class TriviaMazeGUIStart {
+public class TriviaMazeMain {
 
     /**
      * Runs the Trivia Maze GUI.

@@ -17,13 +17,19 @@ import java.io.Serializable;
 
 public class Map implements Serializable {
 
-    /** A generated serial version UID for object Serialization. */
+    /**
+     * A generated serial version UID for object Serialization.
+     */
     private static final long serialVersionUID = 4624303903866067117L;
 
-    /** The default initial size for a new map. */
+    /**
+     * The default initial size for a new map.
+     */
     private static final int MAZE_SIZE = 12;
 
-    /** The default size for each room. */
+    /**
+     * The default size for each room.
+     */
     private static final int ROOM_SIZE = 45;
 
 
@@ -35,18 +41,18 @@ public class Map implements Serializable {
      * 3 = Question Room
      * 4 = Finish
      */
-    private int myMap[][] = { { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
-                                    { 2, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 2},
-                                    { 2, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 2 },
-                                    { 2, 0, 1, 1, 3, 0, 1, 0, 0, 0, 1, 2 },
-                                    { 2, 0, 0, 0, 1, 0, 3, 1, 3, 0, 1, 2 },
-                                    { 2, 1, 3, 1, 1, 0, 1, 0, 1, 0, 0, 2 },
-                                    { 2, 0, 1, 0, 0, 0, 1, 0, 1, 1, 3, 2 },
-                                    { 2, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 2 },
-                                    { 2, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 2 },
-                                    { 2, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 2 },
-                                    { 2, 0, 1, 1, 3, 1, 1, 1, 1, 1, 4, 2 },
-                                    { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2}};
+    private int myMap[][] = {{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+            {2, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 2},
+            {2, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 2},
+            {2, 0, 1, 1, 3, 0, 1, 0, 0, 0, 1, 2},
+            {2, 0, 0, 0, 1, 0, 3, 1, 3, 0, 1, 2},
+            {2, 1, 3, 1, 1, 0, 1, 0, 1, 0, 0, 2},
+            {2, 0, 1, 0, 0, 0, 1, 0, 1, 1, 3, 2},
+            {2, 1, 1, 0, 1, 1, 1, 0, 0, 0, 1, 2},
+            {2, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 2},
+            {2, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 2},
+            {2, 0, 1, 1, 3, 1, 1, 1, 1, 1, 4, 2},
+            {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2}};
 
     /**
      * The height of the map.
@@ -97,46 +103,46 @@ public class Map implements Serializable {
      */
     public Map() {
         ImageIcon img = new ImageIcon("TriviaMaze\\src\\Sprites\\grass.png");
-        if (img.getIconHeight()==-1){
+        if (img.getIconHeight() == -1) {
             img = new ImageIcon("./src/Sprites/grass.png");
         }
         Image grassImage = img.getImage();
-        myGrass = grassImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
+        myGrass = grassImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE, java.awt.Image.SCALE_SMOOTH);
 
         img = new ImageIcon("TriviaMaze\\src\\Sprites\\sand.png");
-        if (img.getIconHeight()==-1){
+        if (img.getIconHeight() == -1) {
             img = new ImageIcon("./src/Sprites/sand.png");
         }
         Image sandImage = img.getImage();
-        mySand = sandImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
+        mySand = sandImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE, java.awt.Image.SCALE_SMOOTH);
 
         img = new ImageIcon("TriviaMaze\\src\\Sprites\\wall.png");
-        if (img.getIconHeight()==-1){
+        if (img.getIconHeight() == -1) {
             img = new ImageIcon("./src/Sprites/wall.png");
         }
         Image wallImage = img.getImage();
-        myWall = wallImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
+        myWall = wallImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE, java.awt.Image.SCALE_SMOOTH);
 
         img = new ImageIcon("TriviaMaze\\src\\Sprites\\question.png");
-        if (img.getIconHeight()==-1){
+        if (img.getIconHeight() == -1) {
             img = new ImageIcon("./src/Sprites/question.png");
         }
         Image questionImage = img.getImage();
-        myQuestion = questionImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
+        myQuestion = questionImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE, java.awt.Image.SCALE_SMOOTH);
 
         img = new ImageIcon("TriviaMaze\\src\\Sprites\\finish.PNG");
-        if (img.getIconHeight()==-1){
+        if (img.getIconHeight() == -1) {
             img = new ImageIcon("./src/Sprites/finish.PNG");
         }
         Image finishImage = img.getImage();
-        myFinish = finishImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
+        myFinish = finishImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE, java.awt.Image.SCALE_SMOOTH);
 
         img = new ImageIcon("TriviaMaze\\src\\Sprites\\yasuo.png");
-        if (img.getIconHeight()==-1){
+        if (img.getIconHeight() == -1) {
             img = new ImageIcon("./src/Sprites/yasuo.png");
         }
         Image playerImage = img.getImage();
-        player = playerImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
+        player = playerImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE, java.awt.Image.SCALE_SMOOTH);
 
 
         myHeight = MAZE_SIZE;
@@ -148,41 +154,52 @@ public class Map implements Serializable {
 
     /**
      * Getter for the image of the Grass.
+     *
      * @return Image of grass.
      */
-    public Image getGrass(){
+    public Image getGrass() {
         return myGrass;
     }
+
     /**
      * Getter for the image of the Sand.
+     *
      * @return Image of Sand.
      */
-    public Image getSand(){
+    public Image getSand() {
         return mySand;
     }
+
     /**
      * Getter for the image of the Wall.
+     *
      * @return Image of Wall.
      */
-    public Image getWall(){
+    public Image getWall() {
         return myWall;
     }
+
     /**
      * Getter for the question.
+     *
      * @return question.
      */
     public Image getQuestion() {
         return myQuestion;
     }
+
     /**
      * Getter for image of the finish line.
+     *
      * @return Image of finish line.
      */
     public Image getFinish() {
         return myFinish;
     }
+
     /**
      * Getter for image of the player.
+     *
      * @return Image of player.
      */
     public Image getPlayer() {
@@ -256,8 +273,9 @@ public class Map implements Serializable {
 
     /**
      * Changes the element.
-     * @param y value.
-     * @param x value.
+     *
+     * @param y         value.
+     * @param x         value.
      * @param roomValue value for the room.
      */
     public void changeElement(int y, int x, int roomValue) {

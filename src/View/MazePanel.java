@@ -1,6 +1,6 @@
 package src.View;
 
-import src.Logic.Player;
+import src.Model.Player;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

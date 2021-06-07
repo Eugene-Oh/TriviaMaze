@@ -1,4 +1,4 @@
-package src.Logic;
+package src.Model;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,16 +6,24 @@ import java.io.Serializable;
 
 public class Player implements Serializable {
 
-    /** A generated serial version UID for object Serialization. */
+    /**
+     * A generated serial version UID for object Serialization.
+     */
     private static final long serialVersionUID = 4874303903866067117L;
 
-    /** The size of each room. */
+    /**
+     * The size of each room.
+     */
     private static final int ROOM_SIZE = 45;
 
-    /** Starting room for the player. */
+    /**
+     * Starting room for the player.
+     */
     private static final int PLAYER_START = 1;
 
-    /** Current room X and Y-Coordinate. */
+    /**
+     * Current room X and Y-Coordinate.
+     */
     private int roomX, roomY;
 
     /**
@@ -53,13 +61,16 @@ public class Player implements Serializable {
 
     /**
      * Getter for Room's X Coordinate.
+     *
      * @return roomX The X coordinate for the room the player is currently in.
      */
     public int getRoomXCoordinate() {
         return roomX;
     }
+
     /**
      * Getter for Room's Y Coordinate.
+     *
      * @return roomX The Y coordinate for the room the player is currently in.
      */
     public int getRoomYCoordinate() {
@@ -68,12 +79,13 @@ public class Player implements Serializable {
 
     /**
      * Setter/Sets the clock.
+     *
      * @param theSecond1 First value that represents a second of the clock.
      * @param theSecond2 Second value that represents a second of the clock.
      * @param theMinute1 First value that represents a minute of the clock.
      * @param theMinute2 Second value that represents a minute of the clock.
      */
-    public void setClock (int theSecond1, int theSecond2, int theMinute1, int theMinute2) {
+    public void setClock(int theSecond1, int theSecond2, int theMinute1, int theMinute2) {
         myClockSeconds1 = theSecond1;
         myClockSeconds2 = theSecond2;
         myClockMinute1 = theMinute1;
@@ -82,27 +94,34 @@ public class Player implements Serializable {
 
     /**
      * Getter for Second 1.
+     *
      * @return First value that represents a second of the clock.
      */
     public int getSecond1() {
         return myClockSeconds1;
     }
+
     /**
      * Getter for Second 2.
+     *
      * @return Second value that represents a seconds of the clock.
      */
     public int getSecond2() {
         return myClockSeconds2;
     }
+
     /**
      * Getter for Minute 1.
+     *
      * @return First value that represents a minutes of the clock.
      */
     public int getMinute1() {
         return myClockMinute1;
     }
+
     /**
      * Getter for Second 2.
+     *
      * @return Second value that represents a minutes of the clock.
      */
     public int getMinute2() {
@@ -111,6 +130,7 @@ public class Player implements Serializable {
 
     /**
      * Moves the player.
+     *
      * @param dx directional x value.
      * @param dy directional y value.
      */

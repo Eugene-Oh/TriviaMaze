@@ -1,8 +1,8 @@
 /*
-* TCSS 305 � Fall 2020
-* Assignment 4: GUI Drawing and Menus
-*
-*/
+ * TCSS 305 � Fall 2020
+ * Assignment 4: GUI Drawing and Menus
+ *
+ */
 package src.SaveLoad;
 
 import java.awt.FileDialog;
@@ -27,47 +27,47 @@ import src.View.MazePanel;
  */
 public class SaveAction {
 
-	/**
+    /**
      * Constructs a SaveAction.
-     * 
+     * <p>
      * Save all the data for the current drawing to a file.
      */
-	public SaveAction(MazePanel thePanel) {
-		// Save all the data for the current drawing to a file.
-		Frame fr = new Frame();
+    public SaveAction(MazePanel thePanel) {
+        // Save all the data for the current drawing to a file.
+        Frame fr = new Frame();
 
-		FileDialog fd; // A file dialog box that will let the user
-						// specify the output file.
+        FileDialog fd; // A file dialog box that will let the user
+        // specify the output file.
 
-		fd = new FileDialog(fr, "Save to File", FileDialog.SAVE);
-		fd.show();
+        fd = new FileDialog(fr, "Save to File", FileDialog.SAVE);
+        fd.show();
 
-		String fileName = fd.getFile(); // Get the file name specified by the user.
-		System.out.println(fileName);
-		if (fileName == null)
-			return; // User has canceled.
+        String fileName = fd.getFile(); // Get the file name specified by the user.
+        System.out.println(fileName);
+        if (fileName == null)
+            return; // User has canceled.
 
-		String directoryName = fd.getDirectory(); // The name of the directory
-													// where the specified file is located.
+        String directoryName = fd.getDirectory(); // The name of the directory
+        // where the specified file is located.
 
-		File file = new File(directoryName, fileName); // Combine the directory name with the
-														// name to produce a usable file specification.
+        File file = new File(directoryName, fileName); // Combine the directory name with the
+        // name to produce a usable file specification.
 
-		file.setWritable(true); // make it writable.
+        file.setWritable(true); // make it writable.
 
-		ObjectOutputStream obj_out;
-		try {
-			obj_out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
+        ObjectOutputStream obj_out;
+        try {
+            obj_out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 
-			System.out.println(thePanel.getPlayer().getRoomXCoordinate());
-			System.out.println(thePanel.getPlayer().getRoomYCoordinate());
+            System.out.println(thePanel.getPlayer().getRoomXCoordinate());
+            System.out.println(thePanel.getPlayer().getRoomYCoordinate());
 
-			obj_out.writeObject(thePanel.getPlayer()); // s
-			obj_out.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println(e);
-			return;
-		}
-	}
+            obj_out.writeObject(thePanel.getPlayer()); // s
+            obj_out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println(e);
+            return;
+        }
+    }
 }

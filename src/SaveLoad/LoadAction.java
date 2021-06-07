@@ -1,11 +1,11 @@
 /*
-* TCSS 305 � Fall 2020
-* Assignment 4: GUI Drawing and Menus
-*
-*/
+ * TCSS 305 � Fall 2020
+ * Assignment 4: GUI Drawing and Menus
+ *
+ */
 package src.SaveLoad;
 
-import src.Logic.Player;
+import src.Model.Player;
 import src.View.MazePanel;
 
 import java.awt.FileDialog;
@@ -15,10 +15,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
-
-
-import javax.swing.JPanel;
 
 
 /**
@@ -29,43 +25,43 @@ import javax.swing.JPanel;
  * @version Fall 2020
  */
 public class LoadAction {
-	
-	/**
+
+    /**
      * Constructs a LoadAction.
-     * 
+     * <p>
      * Loads all the drawing data from a file to app.
      */
-	public LoadAction(MazePanel thePanel) {
+    public LoadAction(MazePanel thePanel) {
 
-		FileDialog fd; // A file dialog box that will let the user
-						// specify the input file.
+        FileDialog fd; // A file dialog box that will let the user
+        // specify the input file.
 
-		fd = new FileDialog(new Frame(), "Load File", FileDialog.LOAD);
-		fd.show();
+        fd = new FileDialog(new Frame(), "Load File", FileDialog.LOAD);
+        fd.show();
 
-		String fileName = fd.getFile(); // Get the file name specified by the user.
+        String fileName = fd.getFile(); // Get the file name specified by the user.
 
-		if (fileName == null)
-			return; // User has canceled.
+        if (fileName == null)
+            return; // User has canceled.
 
-		String directoryName = fd.getDirectory(); // The name of the directory
-													// where the specified file is located.
+        String directoryName = fd.getDirectory(); // The name of the directory
+        // where the specified file is located.
 
-		File file = new File(directoryName, fileName); // Combine the directory name with the
-														// name to produce a usable file specification.
+        File file = new File(directoryName, fileName); // Combine the directory name with the
+        // name to produce a usable file specification.
 
-		ObjectInputStream ois;
-		try { // Open the file.
-			System.out.println("Loading");
-			ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
-			Player player = (Player) ois.readObject();
-			thePanel.setPlayer(player);
+        ObjectInputStream ois;
+        try { // Open the file.
+            System.out.println("Loading");
+            ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
+            Player player = (Player) ois.readObject();
+            thePanel.setPlayer(player);
 
-		} catch (IOException | ClassNotFoundException e) {
-			System.out.println(e.getMessage());
-			e.printStackTrace();
-			return;
-		}
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return;
+        }
 
-	}
+    }
 }

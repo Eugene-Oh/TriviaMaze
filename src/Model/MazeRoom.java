@@ -2,41 +2,54 @@ package Model;
 
 import java.util.HashMap;
 
-/**Mazeroom is the rooms that will reside in the maze
+/**
+ * Mazeroom is the rooms that will reside in the maze
  * that users will need to unlock inorder to proceed.
- *
  */
 public class MazeRoom {
     /**
      * Class Fields
      */
-    /** Location of the room */
+    /**
+     * Location of the room
+     */
     private int myLocation;
 
-    /** Shows if  user can pass to North*/
+    /**
+     * Shows if  user can pass to North
+     */
     private Boolean canPassN;
 
-    /** Shows if  user can pass to South*/
+    /**
+     * Shows if  user can pass to South
+     */
     private Boolean canPassS;
 
-    /** Shows if  user can pass to West*/
+    /**
+     * Shows if  user can pass to West
+     */
     private Boolean canPassW;
 
-    /** Shows if  user can pass to East*/
+    /**
+     * Shows if  user can pass to East
+     */
     private Boolean canPassE;
 
-    /** Shows if  user unlocked the room*/
+    /**
+     * Shows if  user unlocked the room
+     */
     private Boolean isLocked;
 
     /**
      * Model.MazeRoom constructor
+     *
      * @param theLocation location of the room
-     * @param thePassN  if user can pass to N
-     * @param thePassS  if user can pass to S
-     * @param thePassW  if user can pass to W
-     * @param thePassE  if user can pass to E
+     * @param thePassN    if user can pass to N
+     * @param thePassS    if user can pass to S
+     * @param thePassW    if user can pass to W
+     * @param thePassE    if user can pass to E
      */
-    public MazeRoom(int theLocation, Boolean thePassN, Boolean thePassS, Boolean thePassW, Boolean thePassE){
+    public MazeRoom(int theLocation, Boolean thePassN, Boolean thePassS, Boolean thePassW, Boolean thePassE) {
         myLocation = theLocation;
         canPassN = thePassN;
         canPassS = thePassS;

@@ -28,11 +28,12 @@ public class QuestionAnswer {
 
     /**
      * Constructor.
-     * @param theQuestion The string question
-     * @param theAnswers a list of answer options
+     *
+     * @param theQuestion      The string question
+     * @param theAnswers       a list of answer options
      * @param theCorrectAnswer the correct answer
      */
-    public QuestionAnswer(String theQuestion, String[] theAnswers, String theCorrectAnswer){
+    public QuestionAnswer(String theQuestion, String[] theAnswers, String theCorrectAnswer) {
         myQuestion = theQuestion;
         myAnswers = theAnswers;
         myCorrectAnswer = theCorrectAnswer;
@@ -41,7 +42,8 @@ public class QuestionAnswer {
     }
 
     /**
-     *  Checks if the answer is correct.
+     * Checks if the answer is correct.
+     *
      * @param theAnswer inputted answer.
      * @return boolean value depending if the answer was correct or not.
      */
@@ -51,6 +53,7 @@ public class QuestionAnswer {
 
     /**
      * Getter for question.
+     *
      * @return String representing the question.
      */
     public String getMyQuestion() {
@@ -59,13 +62,16 @@ public class QuestionAnswer {
 
     /**
      * Getter for answers.
+     *
      * @return String Array of answers.
      */
     public String[] getAnswers() {
         return myAnswers;
     }
+
     /**
      * Getter for question.
+     *
      * @return String representing the correct answer.
      */
     public String getCorrectAnswer() {
@@ -74,6 +80,7 @@ public class QuestionAnswer {
 
     /**
      * Getter for isAnswered.
+     *
      * @return Boolean which represents whether the question has been answered or not.
      */
     public Boolean getIsAnswered() {
@@ -82,6 +89,7 @@ public class QuestionAnswer {
 
     /**
      * Sets is Answered.
+     *
      * @param answered Boolean which represents whether the question has been answered or not.
      */
     public void setIsAnswered(Boolean answered) {
@@ -90,6 +98,7 @@ public class QuestionAnswer {
 
     /**
      * toString method.
+     *
      * @return Formatted String.
      */
     public String toString() {
