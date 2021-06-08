@@ -39,6 +39,11 @@ public class TriviaMazeGUI extends JPanel {
     private static final Float WRONG_VOLUME = -20f;
 
     /**
+     * RGB Value for background color.
+     */
+    private static final Color BACKGROUND_COLOR = new Color(142,120,120);
+
+    /**
      * Frame for the overall GUI.
      */
     private final JFrame myFrame;
@@ -199,6 +204,10 @@ public class TriviaMazeGUI extends JPanel {
                 }
             }
         });
+        counter.setBackground(BACKGROUND_COLOR);
+        eastPanel.setBackground(BACKGROUND_COLOR);
+        myQuestionPanel.setBackground(BACKGROUND_COLOR);
+        maze.setBackground(BACKGROUND_COLOR);
         myFrame.add(maze);
         myFrame.add(eastPanel, BorderLayout.EAST);
         audioSetup();
