@@ -11,14 +11,15 @@ import src.Model.QuestionAnswer;
 import src.SaveLoad.LoadAction;
 import src.SaveLoad.SaveAction;
 import src.sql.SQLHelper;
-import src.View.QuestionsAnsweredCounter;
 
+import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.concurrent.TimeUnit;
+import java.io.File;
+import java.io.IOException;
 
 public class TriviaMazeGUI extends JPanel {
 
@@ -26,6 +27,16 @@ public class TriviaMazeGUI extends JPanel {
      * The size of the frame.
      */
     private static final Dimension FRAME_SIZE = new Dimension(800, 700);
+
+    /**
+     * Volume control for when player gets a correct answer.
+     */
+    private static final Float CORRECT_VOLUME = -20f;
+
+    /**
+     * Volume control for when a player gets a wrong answer.
+     */
+    private static final Float WRONG_VOLUME = -20f;
 
     /**
      * Frame for the overall GUI.
@@ -79,19 +90,29 @@ public class TriviaMazeGUI extends JPanel {
     private int myQuestionsAnsweredRight;
 
     /**
-     * The amount of questions answered wrong by the user.
+     * Audio input for correct noise.
      */
-    private int myQuestionsAnsweredWrong;
+    private AudioInputStream myAudioInputStreamCorrect;
 
     /**
-     * The total mount of questions answered.
+     * Audio input for wrong noise.
      */
-    private int myQuestionsAnsweredTotal;
+    private AudioInputStream myAudioInputStreamWrong;
+
+    /**
+     * Audio clip for correct noise.
+     */
+    private Clip myClipCorrect;
+
+    /**
+     * Audio clip for wrong noise.
+     */
+    private Clip myClipWrong;
 
     /**
      * Sets up the overall frame and adds its necessary components.
      */
-    public TriviaMazeGUI() {
+    public TriviaMazeGUI() throws UnsupportedAudioFileException, LineUnavailableException, IOException {
         myFrame = new JFrame();
         ImageIcon img = new ImageIcon("TriviaMaze\\src\\Sprites\\mazeicon.png");
         if (img.getIconHeight() == -1) {
@@ -105,13 +126,10 @@ public class TriviaMazeGUI extends JPanel {
         myFrame.add(myMenuBar, BorderLayout.NORTH);
         JPanel eastPanel = new JPanel(new GridLayout(2, 0));
 
-        QuestionsAnsweredCounter counter = new src.View.QuestionsAnsweredCounter();
+        src.View.QuestionsAnsweredCounter counter = new src.View.QuestionsAnsweredCounter();
 
-
-        JPanel northEastPanel = new JPanel();
-
-        counter.setPreferredSize(new Dimension(240,240));
-        eastPanel.setPreferredSize(new Dimension(245,240));
+        counter.setPreferredSize(new Dimension(240, 240));
+        eastPanel.setPreferredSize(new Dimension(245, 240));
         eastPanel.setVisible(true);
 
         counter.setVisible(true);
@@ -138,6 +156,9 @@ public class TriviaMazeGUI extends JPanel {
                     counter.myQuestionsAnsweredRightAdd();
                     counter.myQuestionsAnsweredTotalAdd();
                     counter.repaint();
+                    myClipCorrect.stop();
+                    myClipCorrect.setMicrosecondPosition(0);
+                    myClipCorrect.start();
                 } else if (!questionpane.isAnsweredCorrect) {
                     maze.setCanPass(false);
                     question[0] = SQLHelper.getQuestionAnswer();
@@ -145,8 +166,10 @@ public class TriviaMazeGUI extends JPanel {
                     counter.myQuestionsAnsweredWrongAdd();
                     counter.myQuestionsAnsweredTotalAdd();
                     counter.repaint();
+                    myClipWrong.stop();
+                    myClipWrong.setMicrosecondPosition(0);
+                    myClipWrong.start();
                 }
-
             }
         });
 
@@ -177,8 +200,8 @@ public class TriviaMazeGUI extends JPanel {
             }
         });
         myFrame.add(maze);
-        myFrame.add(eastPanel,BorderLayout.EAST);
-
+        myFrame.add(eastPanel, BorderLayout.EAST);
+        audioSetup();
         start();
     }
 
@@ -190,6 +213,23 @@ public class TriviaMazeGUI extends JPanel {
         myFrame.pack();
         myFrame.setLocationRelativeTo(null);
         myFrame.setVisible(true);
+    }
+
+    /**
+     * Sets up the correct and wrong sound effects.
+     */
+    public void audioSetup() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        myAudioInputStreamCorrect = AudioSystem.getAudioInputStream(new File("TriviaMaze\\src\\Sound\\correct.wav").getAbsoluteFile());
+        myClipCorrect = AudioSystem.getClip();
+        myClipCorrect.open(myAudioInputStreamCorrect);
+        FloatControl volume1 = (FloatControl) myClipCorrect.getControl(FloatControl.Type.MASTER_GAIN);
+        volume1.setValue(CORRECT_VOLUME);
+
+        myAudioInputStreamWrong = AudioSystem.getAudioInputStream(new File("TriviaMaze\\src\\Sound\\wrong.wav").getAbsoluteFile());
+        myClipWrong = AudioSystem.getClip();
+        myClipWrong.open(myAudioInputStreamWrong);
+        FloatControl volume2 = (FloatControl) myClipWrong.getControl(FloatControl.Type.MASTER_GAIN);
+        volume2.setValue(WRONG_VOLUME);
     }
 
     /**

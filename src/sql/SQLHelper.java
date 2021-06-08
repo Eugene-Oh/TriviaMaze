@@ -139,7 +139,7 @@ public class SQLHelper {
         int id = 5;
         if (isRandom) {
             Random random = new Random();
-            id = random.nextInt(39) + 1;
+            id = random.nextInt(61) + 1;
         }
         String query = String.format("SELECT QUESTION, ANSWER, IS_CORRECT\n" +
                 "FROM questions\n" +

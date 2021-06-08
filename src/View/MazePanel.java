@@ -3,6 +3,7 @@ package src.View;
 import src.Model.Player;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -34,6 +35,21 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
      * The y-coordinate for the widgets below the maze.
      */
     private static final int Y_COORDINATE_INTERFACE = 590;
+
+    /**
+     * Volume control for BGM.
+     */
+    private static final Float BGM_VOLUME = -30f;
+
+    /**
+     * Volume control for footsteps.
+     */
+    private static final Float FOOTSTEPS_VOLUME = -12f;
+
+    /**
+     * Volume control for finish sound effect.
+     */
+    private static final Float FINISH_VOLUME = -10f;
 
     /**
      * Timer for painting.
@@ -76,17 +92,49 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
     private src.Model.Map myMap;
 
     /**
-     * .
+     * Boolean representing if player is at question block in maze.
      */
     private Boolean isAtQuestion = false;
+
     /**
-     * .
+     * Boolean representing if the player can pass the question block.
      */
     private Boolean canPass = true;
 
-
+    /**
+     * Boolean representing if player can move without bounds.
+     */
     private Boolean noClipActivated = false;
 
+    /**
+     * Audio input for walking noises.
+     */
+    private AudioInputStream myAudioInputStreamFootSteps;
+
+    /**
+     * Audio input for BGM.
+     */
+    private AudioInputStream myAudioInputStreamBGM;
+
+    /**
+     * Audio input for BGM.
+     */
+    private AudioInputStream myAudioInputStreamFinish;
+
+    /**
+     * Audio clip for walking noises.
+     */
+    private Clip myClipFootSteps;
+
+    /**
+     * Audio clip for BGM.
+     */
+    private Clip myClipBGM;
+
+    /**
+     * Audio clip for BGM.
+     */
+    private Clip myClipFinish;
 
     /**
      * If the player has reached the finished line.
@@ -101,20 +149,28 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
                                                 { 0, 82, 32, 41 }, { 32, 82, 32, 41 }, { 64, 82, 32, 41 },
                                                 { 0, 123, 32, 41 }, { 32, 123, 32, 41 }, { 64, 123, 32, 41 }};
 
-    private int spriteValue=0;
-    private int spriteStart=0;
+    private int spriteValue = 0;
+
+    private int spriteStart = 0;
+
     private int spriteEnd=11;
+
     private Boolean shouldAnimate=false;
+
     private double userLocationX=1;
+
     private double userLocationY=1;
+
     private double userNextLocationX=1;
+
     private double userNextLocationY=1;
+
     BufferedImage img=null;
 
     /**
      * Sets up each component necessary.
      */
-    public MazePanel() {
+    public MazePanel() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         isFinished = false;
         myTimer = new Timer(25, this);
         myPlayer = new Player();
@@ -140,6 +196,7 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
         Timer timer = new Timer(50, actionListener);
         timer.setInitialDelay(0);
         timer.start();
+        audioSetup();
     }
 
     /**
@@ -148,6 +205,33 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
     @Override
     public void actionPerformed(ActionEvent e) {
         repaint();
+    }
+
+    /**
+     * Sets up the sound effects.
+     */
+    public void audioSetup() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        // Audio setup for footsteps.
+        myAudioInputStreamFootSteps = AudioSystem.getAudioInputStream(new File("TriviaMaze\\src\\Sound\\sand.wav").getAbsoluteFile());
+        myClipFootSteps = AudioSystem.getClip();
+        myClipFootSteps.open(myAudioInputStreamFootSteps);
+        FloatControl volume1 = (FloatControl) myClipFootSteps.getControl(FloatControl.Type.MASTER_GAIN);
+        volume1.setValue(FOOTSTEPS_VOLUME);
+
+        // Audio setup for BGM.
+        myAudioInputStreamBGM = AudioSystem.getAudioInputStream(new File("TriviaMaze\\src\\Sound\\backgroundmusic.wav").getAbsoluteFile());
+        myClipBGM = AudioSystem.getClip();
+        myClipBGM.open(myAudioInputStreamBGM);
+        FloatControl volume2 = (FloatControl) myClipBGM.getControl(FloatControl.Type.MASTER_GAIN);
+        volume2.setValue(BGM_VOLUME);
+        myClipBGM.loop(Clip.LOOP_CONTINUOUSLY);
+
+        // Audio setup for footsteps.
+        myAudioInputStreamFinish = AudioSystem.getAudioInputStream(new File("TriviaMaze\\src\\Sound\\win.wav").getAbsoluteFile());
+        myClipFinish = AudioSystem.getClip();
+        myClipFinish.open(myAudioInputStreamFinish);
+        FloatControl volume3 = (FloatControl) myClipFinish.getControl(FloatControl.Type.MASTER_GAIN);
+        volume3.setValue(FINISH_VOLUME);
     }
 
     /**
@@ -320,16 +404,13 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
                 if (keycode == KeyEvent.VK_W && (!(myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate() - 1) == 0) &&
                         !(myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate() - 1) == 2))) {
                     animatePlayer(0, -1);
-                }
-                if (keycode == KeyEvent.VK_S && (!(myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate() + 1) == 0) &&
+                } else if (keycode == KeyEvent.VK_S && (!(myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate() + 1) == 0) &&
                         !(myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate() + 1) == 2))) {
                     animatePlayer(0, 1);
-                }
-                if (keycode == KeyEvent.VK_A && !(myMap.getMapRoom(myPlayer.getRoomXCoordinate() - 1, myPlayer.getRoomYCoordinate()) == 0) &&
+                } else if (keycode == KeyEvent.VK_A && !(myMap.getMapRoom(myPlayer.getRoomXCoordinate() - 1, myPlayer.getRoomYCoordinate()) == 0) &&
                         !(myMap.getMapRoom(myPlayer.getRoomXCoordinate() - 1, myPlayer.getRoomYCoordinate()) == 2)) {
                     animatePlayer(-1, 0);
-                }
-                if (keycode == KeyEvent.VK_D && (!(myMap.getMapRoom(myPlayer.getRoomXCoordinate() + 1, myPlayer.getRoomYCoordinate()) == 0) &&
+                } else if (keycode == KeyEvent.VK_D && (!(myMap.getMapRoom(myPlayer.getRoomXCoordinate() + 1, myPlayer.getRoomYCoordinate()) == 0) &&
                         !(myMap.getMapRoom(myPlayer.getRoomXCoordinate() + 1, myPlayer.getRoomYCoordinate()) == 2))) {
                     animatePlayer(1, 0);
                 }
@@ -339,10 +420,14 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
                 else {
                     isAtQuestion = false;
                 }
+                myClipFootSteps.stop();
+                myClipFootSteps.setMicrosecondPosition(0);
+                myClipFootSteps.start();
                 spriteValue = spriteStart;
                 // If at finish line.
                 if (myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate()) == 4) {
                     executor.shutdown();
+                    myClipFinish.start();
                     isFinished = true;
                     final JOptionPane aboutPane = new JOptionPane();
                     aboutPane.showMessageDialog(new JFrame(), "You have finished the maze!",
