@@ -415,9 +415,17 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
                     spriteValue = spriteStart;
                 }
                 spriteValue = spriteValue+1;
-                userLocationX+=(userNextLocationX-Math.floor(userLocationX))/10;
-                userLocationY+=(userNextLocationY-Math.floor(userLocationY))/10;
-                if(userNextLocationX-userLocationX<0.00000000000001 && userNextLocationY-userLocationY<0.00000000000001 ){
+                if(userNextLocationX>userLocationX){
+                    userLocationX+=(userNextLocationX-Math.floor(userLocationX))/10;
+                }else{
+                    userLocationX+=(userNextLocationX-Math.ceil(userLocationX))/10;
+                }
+                if(userNextLocationY>userLocationY) {
+                    userLocationY += (userNextLocationY - Math.floor(userLocationY)) / 10;
+                }else{
+                    userLocationY += (userNextLocationY - Math.ceil(userLocationY)) / 10;
+                }
+                if(Math.abs(userNextLocationX-userLocationX)<0.00000000000001 && Math.abs(userNextLocationY-userLocationY)<0.00000000000001 ){
                     shouldAnimate=false;
                 }
             }else{
