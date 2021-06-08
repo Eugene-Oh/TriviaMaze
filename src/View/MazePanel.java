@@ -88,7 +88,6 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
     private Boolean noClipActivated = false;
 
 
-
     /**
      * If the player has reached the finished line.
      */
@@ -106,6 +105,10 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
     private int spriteStart=0;
     private int spriteEnd=11;
     private Boolean shouldAnimate=false;
+    private double userLocationX=1;
+    private double userLocationY=1;
+    private double userNextLocationX=1;
+    private double userNextLocationY=1;
     BufferedImage img=null;
 
     /**
@@ -134,7 +137,7 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Timer timer = new Timer(25, actionListener);
+        Timer timer = new Timer(50, actionListener);
         timer.setInitialDelay(0);
         timer.start();
     }
@@ -169,7 +172,7 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
         }
 
         Image subSprite = img.getSubimage(spriteSheetCoords[spriteValue][0], spriteSheetCoords[spriteValue][1], spriteSheetCoords[spriteValue][2], spriteSheetCoords[spriteValue][3]);
-        g.drawImage(subSprite, myPlayer.getRoomXCoordinate() * ROOM_SIZE+6, myPlayer.getRoomYCoordinate() * ROOM_SIZE, null);
+        g.drawImage(subSprite, (int)(userLocationX * ROOM_SIZE)+6, (int)(userLocationY * ROOM_SIZE), null);
 
         // Creates the current room interface.
         g.setFont(new Font("TimesRoman", Font.PLAIN, 25));
@@ -393,6 +396,14 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
     }
 
     /**
+     * Getter for boolean value whether game is over or not.
+     * @return boolean value whether game is over or not.
+     */
+    public Boolean getFinished() {
+        return isFinished;
+    }
+
+    /**
      * Action listener.
      */
     private ActionListener actionListener = new ActionListener() {
@@ -404,7 +415,11 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
                     spriteValue = spriteStart;
                 }
                 spriteValue = spriteValue+1;
-                shouldAnimate=false;
+                userLocationX+=(userNextLocationX-Math.floor(userLocationX))/10;
+                userLocationY+=(userNextLocationY-Math.floor(userLocationY))/10;
+                if(userNextLocationX-userLocationX<0.00000000000001 && userNextLocationY-userLocationY<0.00000000000001 ){
+                    shouldAnimate=false;
+                }
             }else{
                 spriteValue=1;
             }
@@ -433,7 +448,11 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
             spriteStart=9;
             spriteEnd=11;
         }
+        userLocationX=myPlayer.getRoomXCoordinate();
+        userLocationY=myPlayer.getRoomYCoordinate();
         shouldAnimate=true;
         myPlayer.move(x, y);
+        userNextLocationX=myPlayer.getRoomXCoordinate();
+        userNextLocationY=myPlayer.getRoomYCoordinate();
     }
 }
