@@ -101,6 +101,9 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
                                                 { 0, 82, 32, 41 }, { 32, 82, 32, 41 }, { 64, 82, 32, 41 },
                                                 { 0, 123, 32, 41 }, { 32, 123, 32, 41 }, { 64, 123, 32, 41 }};
 
+    /**
+     * Player Animation related fields
+     */
     private int spriteValue=0;
     private int spriteStart=0;
     private int spriteEnd=11;
@@ -404,7 +407,7 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
     }
 
     /**
-     * Action listener.
+     * Action listener for animation.
      */
     private ActionListener actionListener = new ActionListener() {
         @Override
