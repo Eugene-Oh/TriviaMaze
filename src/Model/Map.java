@@ -85,14 +85,14 @@ public class Map implements Serializable {
      * Constructs a new map using default values.
      */
     public Map() {
-        ImageIcon img = new ImageIcon("TriviaMaze\\src\\Sprites\\grass.png");
+        ImageIcon img = new ImageIcon("TriviaMaze\\src\\Sprites\\difRoad.png");
         if (img.getIconHeight()==-1){
             img = new ImageIcon("./src/Sprites/difRoad.png");
         }
         Image grassImage = img.getImage();
         myGrass = grassImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
 
-        img = new ImageIcon("TriviaMaze\\src\\Sprites\\sand.png");
+        img = new ImageIcon("TriviaMaze\\src\\Sprites\\blue.png");
         if (img.getIconHeight()==-1){
             img = new ImageIcon("./src/Sprites/blue.png");
         }
