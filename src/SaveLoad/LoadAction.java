@@ -52,7 +52,6 @@ public class LoadAction {
 
         ObjectInputStream ois;
         try { // Open the file.
-            System.out.println("Loading");
             ois = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
             Player player = (Player) ois.readObject();
             thePanel.setPlayer(player);

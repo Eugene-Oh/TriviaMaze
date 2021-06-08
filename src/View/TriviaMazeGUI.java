@@ -307,6 +307,9 @@ public class TriviaMazeGUI extends JPanel {
         myLoadMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 new LoadAction(maze);
+                maze.setUserLocation(maze.getPlayer().getRoomXCoordinate(),maze.getPlayer().getRoomYCoordinate());
+                validate();
+                repaint();
             }
         });
     }

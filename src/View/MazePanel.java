@@ -398,6 +398,15 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
     }
 
     /**
+     * @param userLocationX
+     * @param userLocationY
+     */
+    public void setUserLocation(double userLocationX, double userLocationY) {
+        this.userLocationX = userLocationX;
+        this.userLocationY = userLocationY;
+    }
+
+    /**
      * Sets up the ability for the user to move their player icon and the bounds where the player
      * cannot move to.
      */

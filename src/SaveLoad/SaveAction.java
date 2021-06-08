@@ -43,7 +43,6 @@ public class SaveAction {
         fd.show();
 
         String fileName = fd.getFile(); // Get the file name specified by the user.
-        System.out.println(fileName);
         if (fileName == null)
             return; // User has canceled.
 
@@ -59,8 +58,6 @@ public class SaveAction {
         try {
             obj_out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
 
-            System.out.println(thePanel.getPlayer().getRoomXCoordinate());
-            System.out.println(thePanel.getPlayer().getRoomYCoordinate());
 
             obj_out.writeObject(thePanel.getPlayer()); // s
             obj_out.close();
