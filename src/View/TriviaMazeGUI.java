@@ -228,13 +228,21 @@ public class TriviaMazeGUI extends JPanel {
      * Sets up the correct and wrong sound effects.
      */
     public void audioSetup() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        myAudioInputStreamCorrect = AudioSystem.getAudioInputStream(new File("TriviaMaze\\src\\Sound\\correct.wav").getAbsoluteFile());
+        File correctFile = new File("TriviaMaze\\src\\Sound\\correct.wav");
+        if(!correctFile.isFile()){
+            correctFile = new File("./src/Sound/correct.wav");
+        }
+        myAudioInputStreamCorrect = AudioSystem.getAudioInputStream(correctFile.getAbsoluteFile());
         myClipCorrect = AudioSystem.getClip();
         myClipCorrect.open(myAudioInputStreamCorrect);
         FloatControl volume1 = (FloatControl) myClipCorrect.getControl(FloatControl.Type.MASTER_GAIN);
         volume1.setValue(CORRECT_VOLUME);
 
-        myAudioInputStreamWrong = AudioSystem.getAudioInputStream(new File("TriviaMaze\\src\\Sound\\wrong.wav").getAbsoluteFile());
+        File wrongFile = new File("TriviaMaze\\src\\Sound\\wrong.wav");
+        if(!wrongFile.isFile()){
+            wrongFile = new File("./src/Sound/wrong.wav");
+        }
+        myAudioInputStreamWrong = AudioSystem.getAudioInputStream(wrongFile.getAbsoluteFile());
         myClipWrong = AudioSystem.getClip();
         myClipWrong.open(myAudioInputStreamWrong);
         FloatControl volume2 = (FloatControl) myClipWrong.getControl(FloatControl.Type.MASTER_GAIN);

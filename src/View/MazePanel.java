@@ -211,14 +211,22 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
      */
     public void audioSetup() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         // Audio setup for footsteps.
-        myAudioInputStreamFootSteps = AudioSystem.getAudioInputStream(new File("TriviaMaze\\src\\Sound\\sand.wav").getAbsoluteFile());
+        File sandFile = new File("TriviaMaze\\src\\Sound\\sand.wav");
+        if(!sandFile.isFile()){
+            sandFile = new File("./src/Sound/sand.wav");
+        }
+        myAudioInputStreamFootSteps = AudioSystem.getAudioInputStream(sandFile.getAbsoluteFile());
         myClipFootSteps = AudioSystem.getClip();
         myClipFootSteps.open(myAudioInputStreamFootSteps);
         FloatControl volume1 = (FloatControl) myClipFootSteps.getControl(FloatControl.Type.MASTER_GAIN);
         volume1.setValue(FOOTSTEPS_VOLUME);
 
         // Audio setup for BGM.
-        myAudioInputStreamBGM = AudioSystem.getAudioInputStream(new File("TriviaMaze\\src\\Sound\\backgroundmusic.wav").getAbsoluteFile());
+        File backgroundmusicFile = new File("TriviaMaze\\src\\Sound\\backgroundmusic.wav");
+        if(!backgroundmusicFile.isFile()){
+            backgroundmusicFile = new File("./src/Sound/backgroundmusic.wav");
+        }
+        myAudioInputStreamBGM = AudioSystem.getAudioInputStream(backgroundmusicFile.getAbsoluteFile());
         myClipBGM = AudioSystem.getClip();
         myClipBGM.open(myAudioInputStreamBGM);
         FloatControl volume2 = (FloatControl) myClipBGM.getControl(FloatControl.Type.MASTER_GAIN);
@@ -226,7 +234,11 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
         myClipBGM.loop(Clip.LOOP_CONTINUOUSLY);
 
         // Audio setup for footsteps.
-        myAudioInputStreamFinish = AudioSystem.getAudioInputStream(new File("TriviaMaze\\src\\Sound\\win.wav").getAbsoluteFile());
+        File winFile = new File("TriviaMaze\\src\\Sound\\win.wav");
+        if(!winFile.isFile()){
+            winFile = new File("./src/Sound/win.wav");
+        }
+        myAudioInputStreamFinish = AudioSystem.getAudioInputStream(winFile.getAbsoluteFile());
         myClipFinish = AudioSystem.getClip();
         myClipFinish.open(myAudioInputStreamFinish);
         FloatControl volume3 = (FloatControl) myClipFinish.getControl(FloatControl.Type.MASTER_GAIN);
