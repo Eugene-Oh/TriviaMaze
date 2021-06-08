@@ -1,9 +1,8 @@
 package src.View;
 
 import src.Model.Player;
-
-import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -165,7 +164,7 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
 
     private double userNextLocationY=1;
 
-    BufferedImage img=null;
+    BufferedImage img = null;
 
     /**
      * Sets up each component necessary.
@@ -489,7 +488,7 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
     }
 
     /**
-     * Action listener.
+     * Action listener for animation.
      */
     private ActionListener actionListener = new ActionListener() {
         @Override
