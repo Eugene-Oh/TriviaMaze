@@ -4,6 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.Serializable;
 
+/**
+ * A class representing the player within a Maze.
+ *
+ * @author Eugene Oh, Jonathan Cho, Yavuzalp Turkoglu
+ * @version Spring 2021
+ */
 public class Player implements Serializable {
 
     /**

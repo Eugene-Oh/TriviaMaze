@@ -11,6 +11,12 @@ import javax.swing.event.ChangeListener;
 
 import  src.Model.QuestionAnswer;
 
+/**
+ * A class that handles the QuestionPane.
+ *
+ * @author Eugene Oh, Jonathan Cho, Yavuzalp Turkoglu
+ * @version 4.0
+ */
     public class QuestionPane extends JPanel implements PropertyChangeListener{
         /**
          * JLabel that contains the question.

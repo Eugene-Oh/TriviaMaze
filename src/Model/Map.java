@@ -12,7 +12,7 @@ import java.io.Serializable;
  * A class representing the Maze on the Maze Room Program.
  *
  * @author Eugene Oh
- * @version 4.0
+ * @version Spring 2021
  */
 
 public class Map implements Serializable {

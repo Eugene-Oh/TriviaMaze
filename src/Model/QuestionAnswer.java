@@ -8,6 +8,12 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 
+/**
+ * A class representing questions and answers.
+ *
+ * @author Eugene Oh, Jonathan Cho, Yavuzalp Turkoglu
+ * @version Spring 2021
+ */
 public class QuestionAnswer {
     /**
      * String for the question.

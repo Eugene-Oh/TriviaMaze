@@ -17,6 +17,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * A class that handles the MazePanel.
+ *
+ * @author Eugene Oh, Jonathan Cho, Yavuzalp Turkoglu
+ * @version 4.0
+ */
 public class MazePanel extends JPanel implements ActionListener, KeyListener, PropertyChangeListener {
 
     /**
