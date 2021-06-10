@@ -1,8 +1,9 @@
 package src.View;
 
 import src.Model.Player;
-import javax.sound.sampled.*;
+
 import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -466,13 +467,38 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
                     myExecutor.shutdown();
                     myClipFinish.start();
                     myFinished = true;
-                    final JOptionPane aboutPane = new JOptionPane();
-                    aboutPane.showMessageDialog(new JFrame(), "You have finished the maze!",
-                            "Finished", JOptionPane.INFORMATION_MESSAGE);
+                    showFinished();
                 }
             }
             fireChangeListeners();
         }
+    }
+
+    /**
+     * Shows a video when the player has finished the maze.
+     */
+    public void showFinished() {
+        ImageIcon img = new ImageIcon("TriviaMaze\\src\\Sprites\\cow.gif");
+        if (img.getIconHeight() == -1) {
+            img = new ImageIcon("./src/Sprites/cow.gif");
+        }
+        Image finishedImage = img.getImage();
+        Image finished = finishedImage.getScaledInstance(400, 400, java.awt.Image.SCALE_DEFAULT);
+
+        ImageIcon icon = new ImageIcon(finished);
+        Image image = icon.getImage();
+        image = image.getScaledInstance(400, 400, Image.SCALE_DEFAULT);
+
+        icon = new ImageIcon(image);
+        JLabel label = new JLabel(icon);
+
+        JFrame f = new JFrame("You Won!!!");
+        f.getContentPane().add(label);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.pack();
+        f.setSize(400, 400);
+        f.setLocationRelativeTo(null);
+        f.setVisible(true);
     }
 
     /**
