@@ -18,7 +18,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * A class that handles the MazePanel.
+ * A class that handles the creates the maze in the actual GUI.
  *
  * @author Eugene Oh, Jonathan Cho, Yavuzalp Turkoglu
  * @version 4.0
@@ -51,6 +51,74 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
     private static final Float FINISH_VOLUME = -10f;
 
     /**
+     * Coordinates of player sprite.
+     */
+    private final int[][] SPRITE_SHEET_COORDINATES = {{0, 0, 32, 41}, {32, 0, 32, 41}, {64, 0, 32, 41},
+            {0, 41, 32, 41}, {32, 41, 32, 41}, {64, 41, 32, 41},
+            {0, 82, 32, 41}, {32, 82, 32, 41}, {64, 82, 32, 41},
+            {0, 123, 32, 41}, {32, 123, 32, 41}, {64, 123, 32, 41}};
+
+    /**
+     * Value of the sprite.
+     */
+    private int SPRITE_VALUE = 0;
+
+    /**
+     * Value of sprite start.
+     */
+    private int SPRITE_START = 0;
+
+    /**
+     * Value of sprite end.
+     */
+    private int SPRITE_END = 11;
+
+    /**
+     * Represents if player should be animated.
+     */
+    private Boolean SHOULD_ANIMATE = false;
+
+    /**
+     * Represents the player's location at an x-coordinate.
+     */
+    private double USER_LOCATION_X = 1;
+
+    /**
+     * Represents the player's location at an y-coordinate.
+     */
+    private double USER_LOCATION_Y = 1;
+
+    /**
+     * Represents the next player's location at an x-coordinate.
+     */
+    private double USER_NEXT_LOCATION_X = 1;
+
+    /**
+     * Represents the next player's location at an y-coordinate.
+     */
+    private double USER_NEXT_LOCATION_Y = 1;
+
+    /**
+     * Buffered Image of sprite.
+     */
+    private BufferedImage IMAGE = null;
+
+    /**
+     * Boolean representing if player is at question block in maze.
+     */
+    private Boolean myAtQuestion;
+
+    /**
+     * Boolean representing if the player can pass the question block.
+     */
+    private Boolean myCanPass;
+
+    /**
+     * Boolean representing if player can move without bounds.
+     */
+    private Boolean myNoClipActivated;
+
+    /**
      * Timer for painting.
      */
     private Timer myTimer;
@@ -78,7 +146,7 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
     /**
      * Used for the clock.
      */
-    private ScheduledExecutorService executor;
+    private ScheduledExecutorService myExecutor;
 
     /**
      * Represents the player in the maze.
@@ -89,21 +157,6 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
      * Logic behind the maze.
      */
     private src.Model.Map myMap;
-
-    /**
-     * Boolean representing if player is at question block in maze.
-     */
-    private Boolean isAtQuestion = false;
-
-    /**
-     * Boolean representing if the player can pass the question block.
-     */
-    private Boolean canPass = true;
-
-    /**
-     * Boolean representing if player can move without bounds.
-     */
-    private Boolean noClipActivated = false;
 
     /**
      * Audio input for walking noises.
@@ -138,57 +191,34 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
     /**
      * If the player has reached the finished line.
      */
-    private Boolean isFinished;
+    private Boolean myFinished;
 
     /**
-     * Coordinates of player sprite.
-     */
-    private final int[][] spriteSheetCoords = { { 0, 0, 32, 41 }, { 32, 0, 32, 41 }, { 64, 0, 32, 41 },
-                                                { 0, 41, 32, 41 }, { 32, 41, 32, 41 }, { 64, 41, 32, 41 },
-                                                { 0, 82, 32, 41 }, { 32, 82, 32, 41 }, { 64, 82, 32, 41 },
-                                                { 0, 123, 32, 41 }, { 32, 123, 32, 41 }, { 64, 123, 32, 41 }};
-
-    private int spriteValue = 0;
-
-    private int spriteStart = 0;
-
-    private int spriteEnd=11;
-
-    private Boolean shouldAnimate=false;
-
-    private double userLocationX=1;
-
-    private double userLocationY=1;
-
-    private double userNextLocationX=1;
-
-    private double userNextLocationY=1;
-
-    BufferedImage img = null;
-
-    /**
-     * Sets up each component necessary.
+     * Sets up each component necessary for the overall maze panel.
      */
     public MazePanel() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        isFinished = false;
+        myFinished = false;
         myTimer = new Timer(25, this);
         myPlayer = new Player();
         myMap = new src.Model.Map();
         addKeyListener(new Movement());
         setFocusable(true);
         myTimer.start();
+        myAtQuestion = false;
+        myCanPass = true;
+        myNoClipActivated = false;
         myClockSeconds1 = myPlayer.getSecond1();
         myClockSeconds1 = myPlayer.getSecond2();
         myClockMinute1 = myPlayer.getMinute1();
         myClockMinute2 = myPlayer.getMinute2();
         clock();
-
+        // Sprite setup.
         try {
-            File yasuoFile =new File("TriviaMaze\\src\\Sprites\\yasuo.png");
-            if (!yasuoFile.isFile()){
+            File yasuoFile = new File("TriviaMaze\\src\\Sprites\\yasuo.png");
+            if (!yasuoFile.isFile()) {
                 yasuoFile = new File("./src/Sprites/yasuo.png");
             }
-            img = ImageIO.read(yasuoFile);
+            IMAGE = ImageIO.read(yasuoFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -200,6 +230,8 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
 
     /**
      * Repaints the panel each time a player moves.
+     *
+     * @param e The event that happens on the maze.
      */
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -212,7 +244,7 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
     public void audioSetup() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         // Audio setup for footsteps.
         File sandFile = new File("TriviaMaze\\src\\Sound\\sand.wav");
-        if(!sandFile.isFile()){
+        if (!sandFile.isFile()) {
             sandFile = new File("./src/Sound/sand.wav");
         }
         myAudioInputStreamFootSteps = AudioSystem.getAudioInputStream(sandFile.getAbsoluteFile());
@@ -223,7 +255,7 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
 
         // Audio setup for BGM.
         File backgroundmusicFile = new File("TriviaMaze\\src\\Sound\\backgroundmusic.wav");
-        if(!backgroundmusicFile.isFile()){
+        if (!backgroundmusicFile.isFile()) {
             backgroundmusicFile = new File("./src/Sound/backgroundmusic.wav");
         }
         myAudioInputStreamBGM = AudioSystem.getAudioInputStream(backgroundmusicFile.getAbsoluteFile());
@@ -235,7 +267,7 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
 
         // Audio setup for footsteps.
         File winFile = new File("TriviaMaze\\src\\Sound\\win.wav");
-        if(!winFile.isFile()){
+        if (!winFile.isFile()) {
             winFile = new File("./src/Sound/win.wav");
         }
         myAudioInputStreamFinish = AudioSystem.getAudioInputStream(winFile.getAbsoluteFile());
@@ -247,15 +279,17 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
 
     /**
      * Draws each maze component onto the GUI.
+     *
+     * @param g The object used to draw the maze.
      */
     public void paint(Graphics g) {
         super.paint(g);
         for (int i = 0; i < myMap.getMazeSize(); i++) {
             for (int j = 0; j < myMap.getMazeSize(); j++) {
                 if (myMap.getElement(i, j) == 0) {
-                    g.drawImage(myMap.getGrass(), j * ROOM_SIZE, i * ROOM_SIZE, null);
+                    g.drawImage(myMap.getFireBlock(), j * ROOM_SIZE, i * ROOM_SIZE, null);
                 } else if (myMap.getElement(i, j) == 1) {
-                    g.drawImage(myMap.getSand(), j * ROOM_SIZE, i * ROOM_SIZE, null);
+                    g.drawImage(myMap.getWater(), j * ROOM_SIZE, i * ROOM_SIZE, null);
                 } else if (myMap.getElement(i, j) == 2) {
                     g.drawImage(myMap.getWall(), j * ROOM_SIZE, i * ROOM_SIZE, null);
                 } else if (myMap.getElement(i, j) == 3) {
@@ -266,14 +300,14 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
             }
         }
 
-        Image subSprite = img.getSubimage(spriteSheetCoords[spriteValue][0], spriteSheetCoords[spriteValue][1], spriteSheetCoords[spriteValue][2], spriteSheetCoords[spriteValue][3]);
-        g.drawImage(subSprite, (int)(userLocationX * ROOM_SIZE)+6, (int)(userLocationY * ROOM_SIZE), null);
+        Image subSprite = IMAGE.getSubimage(SPRITE_SHEET_COORDINATES[SPRITE_VALUE][0], SPRITE_SHEET_COORDINATES[SPRITE_VALUE][1], SPRITE_SHEET_COORDINATES[SPRITE_VALUE][2], SPRITE_SHEET_COORDINATES[SPRITE_VALUE][3]);
+        g.drawImage(subSprite, (int) (USER_LOCATION_X * ROOM_SIZE) + 6, (int) (USER_LOCATION_Y * ROOM_SIZE), null);
 
         // Creates the current room interface.
         g.setFont(new Font("TimesRoman", Font.PLAIN, 25));
         g.drawString("Current room:", 40, Y_COORDINATE_INTERFACE);
         if (myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate()) == 1) {
-            g.drawImage(myMap.getSand(), 200, Y_COORDINATE_INTERFACE - 30, this);
+            g.drawImage(myMap.getWater(), 200, Y_COORDINATE_INTERFACE - 30, this);
         } else if (myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate()) == 3) {
             g.drawImage(myMap.getQuestion(), 200, Y_COORDINATE_INTERFACE - 30, this);
         } else if (myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate()) == 4) {
@@ -293,7 +327,7 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
      * Method that handles the game clock.
      */
     public void clock() {
-        executor = Executors.newScheduledThreadPool(1);
+        myExecutor = Executors.newScheduledThreadPool(1);
         Runnable run = new Runnable() {
             @Override
             public void run() {
@@ -317,32 +351,29 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
                 }
             }
         };
-        executor.scheduleAtFixedRate(run, 0, 1, TimeUnit.SECONDS);
+        myExecutor.scheduleAtFixedRate(run, 0, 1, TimeUnit.SECONDS);
         myPlayer.setClock(myClockSeconds1, myClockSeconds2, myClockMinute1, myClockMinute2);
     }
 
+    /**
+     * Default override blank method.
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-
     }
 
     /**
      * Adds a change listener.
-     * @param listener the listener you want to change to.
+     *
+     * @param listener The listener you want to change to.
      */
     public void addChangeListener(ChangeListener listener) {
         listenerList.add(ChangeListener.class, listener);
     }
-    /**
-     * Removes a change listener.
-     * @param listener the listener you want to change to.
-     */
-    public void removeChangeListener(ChangeListener listener) {
-        listenerList.remove(ChangeListener.class, listener);
-    }
 
     /**
      * Getter for ChangeListeners.
+     *
      * @return ChangeListener.
      */
     public ChangeListener[] getChangeListeners() {
@@ -361,18 +392,20 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
 
     /**
      * Sets boolean value for if the player can pass or not.
-     * @param canPass boolean value for if the player can pass or not.
+     *
+     * @param myCanPass boolean value for if the player can pass or not.
      */
-    public void setCanPass(Boolean canPass) {
-        this.canPass = canPass;
+    public void setMyCanPass(Boolean myCanPass) {
+        this.myCanPass = myCanPass;
     }
 
     /**
      * Getter for boolean whether the player is sitting at a question block or not.
+     *
      * @return boolean whether the player is sitting at a question block or not.
      */
     public Boolean getAtQuestion() {
-        return isAtQuestion;
+        return myAtQuestion;
     }
 
     /**
@@ -383,27 +416,12 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
     }
 
     /**
-     * Getter for the room's x coordinate.
-     * @return room's x coordinate.
-     */
-    public int getRoomXCoordinate() {
-        return myPlayer.getRoomXCoordinate();
-    }
-    /**
-     * Getter for the room's y coordinate.
-     * @return room's y coordinate.
-     */
-    public int getRoomYCoordinate() {
-        return myPlayer.getRoomYCoordinate();
-    }
-
-    /**
      * @param userLocationX
      * @param userLocationY
      */
     public void setUserLocation(double userLocationX, double userLocationY) {
-        this.userLocationX = userLocationX;
-        this.userLocationY = userLocationY;
+        this.USER_LOCATION_X = userLocationX;
+        this.USER_LOCATION_Y = userLocationY;
     }
 
     /**
@@ -420,7 +438,7 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
          */
         public void keyPressed(KeyEvent e) {
             int keycode = e.getKeyCode();
-            if (canPass && !isFinished) {
+            if (myCanPass && !myFinished) {
                 if (keycode == KeyEvent.VK_W && (!(myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate() - 1) == 0) &&
                         !(myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate() - 1) == 2))) {
                     animatePlayer(0, -1);
@@ -435,20 +453,19 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
                     animatePlayer(1, 0);
                 }
                 if (myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate()) == 3) {
-                    isAtQuestion = true;
-                }
-                else {
-                    isAtQuestion = false;
+                    myAtQuestion = true;
+                } else {
+                    myAtQuestion = false;
                 }
                 myClipFootSteps.stop();
                 myClipFootSteps.setMicrosecondPosition(0);
                 myClipFootSteps.start();
-                spriteValue = spriteStart;
+                SPRITE_VALUE = SPRITE_START;
                 // If at finish line.
                 if (myMap.getMapRoom(myPlayer.getRoomXCoordinate(), myPlayer.getRoomYCoordinate()) == 4) {
-                    executor.shutdown();
+                    myExecutor.shutdown();
                     myClipFinish.start();
-                    isFinished = true;
+                    myFinished = true;
                     final JOptionPane aboutPane = new JOptionPane();
                     aboutPane.showMessageDialog(new JFrame(), "You have finished the maze!",
                             "Finished", JOptionPane.INFORMATION_MESSAGE);
@@ -458,19 +475,30 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
         }
     }
 
+    /**
+     * Default override blank method.
+     */
     @Override
     public void keyTyped(KeyEvent e) {
     }
 
+    /**
+     * Default override blank method.
+     */
     @Override
     public void keyPressed(KeyEvent e) {
     }
 
+    /**
+     * Default override blank method.
+     */
     @Override
     public void keyReleased(KeyEvent e) {
     }
+
     /**
      * Getter for the player.
+     *
      * @return the Player.
      */
     public Player getPlayer() {
@@ -479,93 +507,85 @@ public class MazePanel extends JPanel implements ActionListener, KeyListener, Pr
 
     /**
      * Setter for the player
+     *
      * @param thePlayer the player.
      */
     public void setPlayer(Player thePlayer) {
         myPlayer = thePlayer;
     }
+
     /**
      * Getter for boolean value whether no clip is activated or not.
+     *
      * @return boolean value whether no clip is activated or not.
      */
-    public Boolean getNoClipActivated() {
-        return noClipActivated;
+    public Boolean getMyNoClipActivated() {
+        return myNoClipActivated;
     }
 
     /**
      * Setter for the noClip.
-     * @param noClipActivated boolean value whether no clip is activated or not.
+     *
+     * @param myNoClipActivated boolean value whether no clip is activated or not.
      */
-    public void setNoClipActivated(Boolean noClipActivated) {
-        this.noClipActivated = noClipActivated;
-    }
-
-    /**
-     * Getter for boolean value whether game is over or not.
-     * @return boolean value whether game is over or not.
-     */
-    public Boolean getFinished() {
-        return isFinished;
+    public void setMyNoClipActivated(Boolean myNoClipActivated) {
+        this.myNoClipActivated = myNoClipActivated;
     }
 
     /**
      * Action listener for animation.
      */
-    private ActionListener actionListener = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-
-            if(shouldAnimate){
-                if (spriteValue == spriteEnd) {
-                    spriteValue = spriteStart;
-                }
-                spriteValue = spriteValue+1;
-                if(userNextLocationX>userLocationX){
-                    userLocationX+=(userNextLocationX-Math.floor(userLocationX))/10;
-                }else{
-                    userLocationX+=(userNextLocationX-Math.ceil(userLocationX))/10;
-                }
-                if(userNextLocationY>userLocationY) {
-                    userLocationY += (userNextLocationY - Math.floor(userLocationY)) / 10;
-                }else{
-                    userLocationY += (userNextLocationY - Math.ceil(userLocationY)) / 10;
-                }
-                if(Math.abs(userNextLocationX-userLocationX)<0.00000000000001 && Math.abs(userNextLocationY-userLocationY)<0.00000000000001 ){
-                    shouldAnimate=false;
-                }
-            }else{
-                spriteValue=1;
+    private ActionListener actionListener = e -> {
+        if (SHOULD_ANIMATE) {
+            if (SPRITE_VALUE == SPRITE_END) {
+                SPRITE_VALUE = SPRITE_START;
             }
-
-            revalidate();
-            repaint();
+            SPRITE_VALUE = SPRITE_VALUE + 1;
+            if (USER_NEXT_LOCATION_X > USER_LOCATION_X) {
+                USER_LOCATION_X += (USER_NEXT_LOCATION_X - Math.floor(USER_LOCATION_X)) / 10;
+            } else {
+                USER_LOCATION_X += (USER_NEXT_LOCATION_X - Math.ceil(USER_LOCATION_X)) / 10;
+            }
+            if (USER_NEXT_LOCATION_Y > USER_LOCATION_Y) {
+                USER_LOCATION_Y += (USER_NEXT_LOCATION_Y - Math.floor(USER_LOCATION_Y)) / 10;
+            } else {
+                USER_LOCATION_Y += (USER_NEXT_LOCATION_Y - Math.ceil(USER_LOCATION_Y)) / 10;
+            }
+            if (Math.abs(USER_NEXT_LOCATION_X - USER_LOCATION_X) < 0.00000000000001 && Math.abs(USER_NEXT_LOCATION_Y - USER_LOCATION_Y) < 0.00000000000001) {
+                SHOULD_ANIMATE = false;
+            }
+        } else {
+            SPRITE_VALUE = 1;
         }
+        revalidate();
+        repaint();
     };
 
     /**
      * Animates the player.
-     * @param x x value.
-     * @param y y value.
+     *
+     * @param x x-value of the player.
+     * @param y y-value of the player.
      */
-    private void animatePlayer(int x, int y){
-        if(x==0 && y==1){
-            spriteStart=0;
-            spriteEnd=2;
-        }else if(x==-1 && y==0){
-            spriteStart=3;
-            spriteEnd=5;
-        }else if(x==1 && y==0){
-            spriteStart=6;
-            spriteEnd=8;
-        }else if(x==0&& y==-1){
-            spriteStart=9;
-            spriteEnd=11;
+    private void animatePlayer(int x, int y) {
+        if (x == 0 && y == 1) {
+            SPRITE_START = 0;
+            SPRITE_END = 2;
+        } else if (x == -1 && y == 0) {
+            SPRITE_START = 3;
+            SPRITE_END = 5;
+        } else if (x == 1 && y == 0) {
+            SPRITE_START = 6;
+            SPRITE_END = 8;
+        } else if (x == 0 && y == -1) {
+            SPRITE_START = 9;
+            SPRITE_END = 11;
         }
-        userLocationX=myPlayer.getRoomXCoordinate();
-        userLocationY=myPlayer.getRoomYCoordinate();
-        shouldAnimate=true;
+        USER_LOCATION_X = myPlayer.getRoomXCoordinate();
+        USER_LOCATION_Y = myPlayer.getRoomYCoordinate();
+        SHOULD_ANIMATE = true;
         myPlayer.move(x, y);
-        userNextLocationX=myPlayer.getRoomXCoordinate();
-        userNextLocationY=myPlayer.getRoomYCoordinate();
+        USER_NEXT_LOCATION_X = myPlayer.getRoomXCoordinate();
+        USER_NEXT_LOCATION_Y = myPlayer.getRoomYCoordinate();
     }
 }

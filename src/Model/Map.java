@@ -1,17 +1,13 @@
-
 package src.Model;
-/**
- * TCSS 360
- */
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.Serializable;
 
 /**
- * A class representing the Maze on the Maze Room Program.
+ * A class representing the logic behind the maze for the Maze Room Program.
  *
- * @author Eugene Oh
+ * @author Eugene Oh, Yavuzalp Turkoglu, Jonathan Cho
  * @version Spring 2021
  */
 
@@ -32,14 +28,13 @@ public class Map implements Serializable {
      */
     private static final int ROOM_SIZE = 45;
 
-
     /**
      * 2-D array representing the map.
-     * 0 = GRASS
-     * 1 = SAND
+     * 0 = FIRE BLOCK
+     * 1 = WATER
      * 2 = WALL
-     * 3 = Question Room
-     * 4 = Finish
+     * 3 = QUESTION ROOM
+     * 4 = FINISH
      */
     private int myMap[][] = {{2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
             {2, 1, 1, 0, 1, 1, 1, 0, 0, 1, 0, 2},
@@ -54,53 +49,56 @@ public class Map implements Serializable {
             {2, 0, 1, 1, 3, 1, 1, 1, 1, 1, 4, 2},
             {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2}};
 
-
-
     /**
      * Image for the grass of the maze.
      */
-    private Image myGrass;
+    private Image myFireBlock;
+
     /**
      * Image for the sand of the maze.
      */
-    private Image mySand;
+    private Image myWater;
+
     /**
      * Image for the walls of the maze.
      */
     private Image myWall;
+
     /**
      * Image for the question blocks of the maze.
      */
     private Image myQuestion;
+
     /**
      * Image for the finish block of the maze.
      */
     private Image myFinish;
+
     /**
      * Image for the player of the maze.
      */
     private Image player;
 
     /**
-     * Constructs a new map using default values.
+     * Constructs the images for each block on the maze and the player.
      */
     public Map() {
         ImageIcon img = new ImageIcon("TriviaMaze\\src\\Sprites\\difRoad.png");
-        if (img.getIconHeight()==-1){
+        if (img.getIconHeight() == -1) {
             img = new ImageIcon("./src/Sprites/difRoad.png");
         }
         Image grassImage = img.getImage();
-        myGrass = grassImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
+        myFireBlock = grassImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE, java.awt.Image.SCALE_SMOOTH);
 
         img = new ImageIcon("TriviaMaze\\src\\Sprites\\blue.png");
-        if (img.getIconHeight()==-1){
+        if (img.getIconHeight() == -1) {
             img = new ImageIcon("./src/Sprites/blue.png");
         }
         Image sandImage = img.getImage();
-        mySand = sandImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE,  java.awt.Image.SCALE_SMOOTH);
+        myWater = sandImage.getScaledInstance(ROOM_SIZE, ROOM_SIZE, java.awt.Image.SCALE_SMOOTH);
 
         img = new ImageIcon("TriviaMaze\\src\\Sprites\\smallRoad.png");
-        if (img.getIconHeight()==-1){
+        if (img.getIconHeight() == -1) {
             img = new ImageIcon("./src/Sprites/smallRoad.png");
         }
         Image wallImage = img.getImage();
@@ -130,27 +128,27 @@ public class Map implements Serializable {
     }
 
     /**
-     * Getter for the image of the Grass.
+     * Getter for the image of the fire block.
      *
-     * @return Image of grass.
+     * @return Image of fire block.
      */
-    public Image getGrass() {
-        return myGrass;
+    public Image getFireBlock() {
+        return myFireBlock;
     }
 
     /**
-     * Getter for the image of the Sand.
+     * Getter for the image of the water.
      *
-     * @return Image of Sand.
+     * @return Image of water.
      */
-    public Image getSand() {
-        return mySand;
+    public Image getWater() {
+        return myWater;
     }
 
     /**
-     * Getter for the image of the Wall.
+     * Getter for the image of the wall.
      *
-     * @return Image of Wall.
+     * @return Image of wall.
      */
     public Image getWall() {
         return myWall;
@@ -175,44 +173,30 @@ public class Map implements Serializable {
     }
 
     /**
-     * Getter for image of the player.
+     * Getter for the size of the maze.
      *
-     * @return Image of player.
-     */
-    public Image getPlayer() {
-        return player;
-    }
-
-
-    /**
-     * Getter for maze Size.
-     *
-     * @return size of the maze.
+     * @return Integer of maze size.
      */
     public static int getMazeSize() {
         return MAZE_SIZE;
     }
 
     /**
-     * Returns the 2-D array representing the map.
+     * Returns an element within the maze using (x,y).
      *
-     * @return The map.
+     * @param x The x-coordinate.
+     * @param y The y-coordinate.
+     * @return The element in the array.
      */
     public int getMapRoom(int x, int y) {
         return myMap[y][x];
     }
 
-
     /**
-     * Returns the player's current x-coordinate.
+     * Returns the element in the designated spot in the array at (y,x).
      *
-     * @return The x-coordinatex
-     */
-
-
-    /**
-     * Returns the element in the designated spot in the array.
-     *
+     * @param y The y-coordinate.
+     * @param x The x-coordinate.
      * @return The element in the array.
      */
     public int getElement(int y, int x) {
@@ -220,14 +204,13 @@ public class Map implements Serializable {
     }
 
     /**
-     * Changes the element.
+     * Changes the element in the array.
      *
-     * @param y         value.
-     * @param x         value.
-     * @param roomValue value for the room.
+     * @param y The y-coordinate.
+     * @param x The x-coordinate.
+     * @param roomValue An integer value that the room should be changed to.
      */
     public void changeElement(int y, int x, int roomValue) {
         myMap[y][x] = roomValue;
-//        System.out.println(myMap[y][x]);
     }
 }

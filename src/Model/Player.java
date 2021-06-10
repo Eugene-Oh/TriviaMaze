@@ -1,7 +1,5 @@
 package src.Model;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.Serializable;
 
 /**
@@ -10,6 +8,7 @@ import java.io.Serializable;
  * @author Eugene Oh, Jonathan Cho, Yavuzalp Turkoglu
  * @version Spring 2021
  */
+
 public class Player implements Serializable {
 
     /**
@@ -47,9 +46,8 @@ public class Player implements Serializable {
      */
     private int myClockMinute2;
 
-
     /**
-     * Default constructor.
+     * Default constructor that starts the clock and player position at starting points.
      */
     public Player() {
         roomX = PLAYER_START;

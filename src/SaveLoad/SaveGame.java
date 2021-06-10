@@ -1,38 +1,22 @@
-/*
- * TCSS 305 � Fall 2020
- * Assignment 4: GUI Drawing and Menus
- *
- */
 package src.SaveLoad;
 
-import java.awt.FileDialog;
-import java.awt.Frame;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-
-import javax.swing.JPanel;
-
 import src.View.MazePanel;
+import java.awt.*;
+import java.io.*;
 
 /**
- * SaveAction is the action we use to save drawings to a file.
+ * A class used to save a game's state.
  *
- * @author Jonathan Cho
- * @author Yavuzalp
- * @version Fall 2020
+ * @author Eugene Oh, Yavuzalp Turkoglu, Jonathan Cho
+ * @version Spring 2021
  */
-public class SaveAction {
+
+public class SaveGame {
 
     /**
-     * Constructs a SaveAction.
-     * <p>
-     * Save all the data for the current drawing to a file.
+     * Constructs a SaveGame and saves all the data for the current game to a file.
      */
-    public SaveAction(MazePanel thePanel) {
+    public SaveGame(MazePanel thePanel) {
         // Save all the data for the current drawing to a file.
         Frame fr = new Frame();
 
@@ -57,8 +41,6 @@ public class SaveAction {
         ObjectOutputStream obj_out;
         try {
             obj_out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
-
-
             obj_out.writeObject(thePanel.getPlayer()); // s
             obj_out.close();
         } catch (IOException e) {

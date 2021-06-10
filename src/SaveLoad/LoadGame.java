@@ -1,13 +1,7 @@
-/*
- * TCSS 305 � Fall 2020
- * Assignment 4: GUI Drawing and Menus
- *
- */
 package src.SaveLoad;
 
 import src.Model.Player;
 import src.View.MazePanel;
-
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.io.BufferedInputStream;
@@ -16,22 +10,19 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
-
 /**
- * LoadAction is the action we use to load drawings from a file.
+ * A class used to load a game state from a file.
  *
- * @author Jonathan Cho
- * @author Yavuzalp
- * @version Fall 2020
+ * @author Eugene Oh, Yavuzalp Turkoglu, Jonathan Cho
+ * @version Spring 2021
  */
-public class LoadAction {
+
+public class LoadGame {
 
     /**
-     * Constructs a LoadAction.
-     * <p>
-     * Loads all the drawing data from a file to app.
+     * Constructs a LoadGame and loads a game from a file.
      */
-    public LoadAction(MazePanel thePanel) {
+    public LoadGame(MazePanel thePanel) {
 
         FileDialog fd; // A file dialog box that will let the user
         // specify the input file.

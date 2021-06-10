@@ -8,8 +8,6 @@ package src.View;
  */
 
 import src.Model.QuestionAnswer;
-import src.SaveLoad.LoadAction;
-import src.SaveLoad.SaveAction;
 import src.sql.SQLHelper;
 
 import javax.sound.sampled.*;
@@ -41,7 +39,7 @@ public class TriviaMazeGUI extends JPanel {
     /**
      * RGB Value for background color.
      */
-    private static final Color BACKGROUND_COLOR = new Color(142,120,120);
+    private static final Color BACKGROUND_COLOR = new Color(142, 120, 120);
 
     /**
      * Frame for the overall GUI.
@@ -49,15 +47,14 @@ public class TriviaMazeGUI extends JPanel {
     private final JFrame myFrame;
 
     /**
-     * Panel for the overall GUI.
+     * QuestionPanel for the overall GUI.
      */
     private src.View.QuestionPane myQuestionPanel;
 
-
     /**
-     * Panel for the overall GUI.
+     * MazePanel for the overall GUI.
      */
-    private src.View.MazePanel maze;
+    private src.View.MazePanel myMaze;
 
     /**
      * The menu bar for the GUI.
@@ -90,9 +87,14 @@ public class TriviaMazeGUI extends JPanel {
     private JMenuItem myCheatsMenuItem;
 
     /**
-     * The amount of questions answered right by the user.
+     * The question counter.
      */
-    private int myQuestionsAnsweredRight;
+    private src.View.QuestionsAnsweredCounter myCounter;
+
+    /**
+     * The panel that holds multiple panels.
+     */
+    private JPanel myEastPanel;
 
     /**
      * Audio input for correct noise.
@@ -123,95 +125,139 @@ public class TriviaMazeGUI extends JPanel {
         if (img.getIconHeight() == -1) {
             img = new ImageIcon("./src/Sprites/mazeicon.png");
         }
-
         myFrame.setIconImage(img.getImage());
         myMenuBar = createMenuBar();
         myFrame.setTitle("TriviaMaze");
         myFrame.setPreferredSize(FRAME_SIZE);
         myFrame.add(myMenuBar, BorderLayout.NORTH);
-        JPanel eastPanel = new JPanel(new GridLayout(2, 0));
-
-        src.View.QuestionsAnsweredCounter counter = new src.View.QuestionsAnsweredCounter();
-
-        counter.setPreferredSize(new Dimension(240, 240));
-        eastPanel.setPreferredSize(new Dimension(245, 240));
-        eastPanel.setVisible(true);
-
-        counter.setVisible(true);
-        final QuestionAnswer[] question = {SQLHelper.getQuestionAnswer()};
-        myQuestionPanel = new src.View.QuestionPane(question[0]);
+        myEastPanel = new JPanel(new GridLayout(2, 0));
+        myCounter = new src.View.QuestionsAnsweredCounter();
+        myCounter.setPreferredSize(new Dimension(240, 240));
+        myEastPanel.setPreferredSize(new Dimension(245, 240));
+        myEastPanel.setVisible(true);
+        myCounter.setVisible(true);
+        QuestionAnswer[] myQuestion = {SQLHelper.getQuestionAnswer()};
+        myQuestionPanel = new src.View.QuestionPane(myQuestion[0]);
         myQuestionPanel.setVisible(false);
-
-        eastPanel.add(myQuestionPanel, "North");
-        eastPanel.add(counter, "South");
+        myEastPanel.add(myQuestionPanel, "North");
+        myEastPanel.add(myCounter, "South");
         revalidate();
         repaint();
-        maze = new src.View.MazePanel();
+        myMaze = new src.View.MazePanel();
         final Boolean[] needNewQuestion = {true};
-        myQuestionsAnsweredRight = 0;
+
+        // Adds required listeners.
+        questionPanelListenerSetup(myQuestion, needNewQuestion);
+        mazeListenerSetup(myQuestion, needNewQuestion);
+
+        myCounter.setBackground(BACKGROUND_COLOR);
+        myEastPanel.setBackground(BACKGROUND_COLOR);
+        myQuestionPanel.setBackground(BACKGROUND_COLOR);
+        myMaze.setBackground(BACKGROUND_COLOR);
+        myFrame.add(myMaze);
+        myFrame.add(myEastPanel, BorderLayout.EAST);
+
+        // Adds audio to GUI.
+        audioSetup();
+
+        start();
+    }
+
+    /**
+     * Setup for the question panel.
+     *
+     * @param myQuestion      The questions from the database.
+     * @param needNewQuestion Represents if a new question should be fetched.
+     */
+    public void questionPanelListenerSetup(QuestionAnswer[] myQuestion, Boolean[] needNewQuestion) {
         myQuestionPanel.addChangeListener(new ChangeListener() {
             /** Called in response to slider events in this window. */
             @Override
             public void stateChanged(final ChangeEvent theEvent) {
                 src.View.QuestionPane questionpane = (src.View.QuestionPane) theEvent.getSource();
-                if (questionpane.isAnsweredCorrect) {
-                    maze.setCanPass(true);
+                if (questionpane.getMyIsAnsweredCorrect()) {
+                    myMaze.setMyCanPass(true);
                     needNewQuestion[0] = true;
-                    maze.removeQuestionRoom();
-                    counter.myQuestionsAnsweredRightAdd();
-                    counter.myQuestionsAnsweredTotalAdd();
-                    counter.repaint();
+                    myMaze.removeQuestionRoom();
+                    myCounter.myQuestionsAnsweredRightAdd();
+                    myCounter.myQuestionsAnsweredTotalAdd();
+                    myCounter.repaint();
                     myClipCorrect.stop();
                     myClipCorrect.setMicrosecondPosition(0);
                     myClipCorrect.start();
-                } else if (!questionpane.isAnsweredCorrect) {
-                    maze.setCanPass(false);
-                    question[0] = SQLHelper.getQuestionAnswer();
-                    myQuestionPanel.updateQuestion(question[0], true);
-                    counter.myQuestionsAnsweredWrongAdd();
-                    counter.myQuestionsAnsweredTotalAdd();
-                    counter.repaint();
+                } else if (!questionpane.getMyIsAnsweredCorrect()) {
+                    myMaze.setMyCanPass(false);
+                    myQuestion[0] = SQLHelper.getQuestionAnswer();
+                    myQuestionPanel.updateQuestion(myQuestion[0], true);
+                    myCounter.myQuestionsAnsweredWrongAdd();
+                    myCounter.myQuestionsAnsweredTotalAdd();
+                    myCounter.repaint();
                     myClipWrong.stop();
                     myClipWrong.setMicrosecondPosition(0);
                     myClipWrong.start();
                 }
             }
         });
+    }
 
-        maze.addChangeListener(new ChangeListener() {
+    /**
+     * Setup for the maze listeners.
+     *
+     * @param myQuestion      The questions from the database.
+     * @param needNewQuestion Represents if a new question should be fetched.
+     */
+    public void mazeListenerSetup(QuestionAnswer[] myQuestion, Boolean[] needNewQuestion) {
+        myMaze.addChangeListener(new ChangeListener() {
             /** Called in response to slider events in this window. */
             @Override
             public void stateChanged(final ChangeEvent theEvent) {
 
-                if (maze.getNoClipActivated() == true) {
-                    maze.setCanPass(true);
+                if (myMaze.getMyNoClipActivated() == true) {
+                    myMaze.setMyCanPass(true);
                     myQuestionPanel.setVisible(false);
                 } else {
-                    if (!maze.getAtQuestion()) {
+                    if (!myMaze.getAtQuestion()) {
                         myQuestionPanel.setVisible(false);
                     } else {
-                        maze.setCanPass(false);
+                        myMaze.setMyCanPass(false);
                         myQuestionPanel.setVisible(true);
-                        if (question[0].getIsAnswered()) {
-                            maze.setCanPass(true);
+                        if (myQuestion[0].getIsAnswered()) {
+                            myMaze.setMyCanPass(true);
                         }
                     }
                     if (needNewQuestion[0]) {
-                        question[0] = SQLHelper.getQuestionAnswer();
-                        myQuestionPanel.updateQuestion(question[0], false);
+                        myQuestion[0] = SQLHelper.getQuestionAnswer();
+                        myQuestionPanel.updateQuestion(myQuestion[0], false);
                         needNewQuestion[0] = false;
                     }
                 }
             }
         });
-        counter.setBackground(BACKGROUND_COLOR);
-        eastPanel.setBackground(BACKGROUND_COLOR);
-        myQuestionPanel.setBackground(BACKGROUND_COLOR);
-        maze.setBackground(BACKGROUND_COLOR);
-        myFrame.add(maze);
-        myFrame.add(eastPanel, BorderLayout.EAST);
-        audioSetup();
-        start();
+    }
+
+    /**
+     * Sets up the correct and wrong sound effects.
+     */
+    public void audioSetup() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        File correctFile = new File("TriviaMaze\\src\\Sound\\correct.wav");
+        if (!correctFile.isFile()) {
+            correctFile = new File("./src/Sound/correct.wav");
+        }
+        myAudioInputStreamCorrect = AudioSystem.getAudioInputStream(correctFile.getAbsoluteFile());
+        myClipCorrect = AudioSystem.getClip();
+        myClipCorrect.open(myAudioInputStreamCorrect);
+        FloatControl volume1 = (FloatControl) myClipCorrect.getControl(FloatControl.Type.MASTER_GAIN);
+        volume1.setValue(CORRECT_VOLUME);
+
+        File wrongFile = new File("TriviaMaze\\src\\Sound\\wrong.wav");
+        if (!wrongFile.isFile()) {
+            wrongFile = new File("./src/Sound/wrong.wav");
+        }
+        myAudioInputStreamWrong = AudioSystem.getAudioInputStream(wrongFile.getAbsoluteFile());
+        myClipWrong = AudioSystem.getClip();
+        myClipWrong.open(myAudioInputStreamWrong);
+        FloatControl volume2 = (FloatControl) myClipWrong.getControl(FloatControl.Type.MASTER_GAIN);
+        volume2.setValue(WRONG_VOLUME);
     }
 
     /**
@@ -222,31 +268,6 @@ public class TriviaMazeGUI extends JPanel {
         myFrame.pack();
         myFrame.setLocationRelativeTo(null);
         myFrame.setVisible(true);
-    }
-
-    /**
-     * Sets up the correct and wrong sound effects.
-     */
-    public void audioSetup() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        File correctFile = new File("TriviaMaze\\src\\Sound\\correct.wav");
-        if(!correctFile.isFile()){
-            correctFile = new File("./src/Sound/correct.wav");
-        }
-        myAudioInputStreamCorrect = AudioSystem.getAudioInputStream(correctFile.getAbsoluteFile());
-        myClipCorrect = AudioSystem.getClip();
-        myClipCorrect.open(myAudioInputStreamCorrect);
-        FloatControl volume1 = (FloatControl) myClipCorrect.getControl(FloatControl.Type.MASTER_GAIN);
-        volume1.setValue(CORRECT_VOLUME);
-
-        File wrongFile = new File("TriviaMaze\\src\\Sound\\wrong.wav");
-        if(!wrongFile.isFile()){
-            wrongFile = new File("./src/Sound/wrong.wav");
-        }
-        myAudioInputStreamWrong = AudioSystem.getAudioInputStream(wrongFile.getAbsoluteFile());
-        myClipWrong = AudioSystem.getClip();
-        myClipWrong.open(myAudioInputStreamWrong);
-        FloatControl volume2 = (FloatControl) myClipWrong.getControl(FloatControl.Type.MASTER_GAIN);
-        volume2.setValue(WRONG_VOLUME);
     }
 
     /**
@@ -288,10 +309,9 @@ public class TriviaMazeGUI extends JPanel {
     private void createSaveMenuItem() {
         mySaveMenuItem = new JMenuItem("Save Game", KeyEvent.VK_C);
         mySaveMenuItem.setEnabled(true);
-
         mySaveMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                new SaveAction(maze);
+                new src.SaveLoad.SaveGame(myMaze);
             }
         });
     }
@@ -306,8 +326,9 @@ public class TriviaMazeGUI extends JPanel {
         // Creates a mouse listener for the load game menu item.
         myLoadMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                new LoadAction(maze);
-                maze.setUserLocation(maze.getPlayer().getRoomXCoordinate(),maze.getPlayer().getRoomYCoordinate());
+                new src.SaveLoad.LoadGame(myMaze);
+                myMaze.setUserLocation(myMaze.getPlayer().getRoomXCoordinate(),
+                        myMaze.getPlayer().getRoomYCoordinate());
                 validate();
                 repaint();
             }
@@ -352,7 +373,9 @@ public class TriviaMazeGUI extends JPanel {
              */
             public void mousePressed(MouseEvent event) {
                 final JOptionPane aboutPane = new JOptionPane();
-                aboutPane.showMessageDialog(new JFrame(), "<html>This is a Maze game where you must answer <br> Trivia questions from League of Legends to traverse through and escape.\n<html>",
+                aboutPane.showMessageDialog(new JFrame(), "<html>This is a Maze game where you must" +
+                                " answer <br> Trivia questions from League of Legends to traverse through " +
+                                "and escape.\n<html>",
                         "About", JOptionPane.INFORMATION_MESSAGE);
             }
         });
@@ -369,7 +392,8 @@ public class TriviaMazeGUI extends JPanel {
              */
             public void mousePressed(MouseEvent event) {
                 final JOptionPane instructionsPane = new JOptionPane();
-                instructionsPane.showMessageDialog(new JFrame(), "<html>Instructions: Movement: Up (W) Down(S) Left(A) Right(D) <br> when you run into a wall, " +
+                instructionsPane.showMessageDialog(new JFrame(), "<html>Instructions: Movement: Up" +
+                                " (W) Down(S) Left(A) Right(D) <br> when you run into a wall, " +
                                 "you must answer a question on the right panel correctly to continue. " +
                                 "<br> Otherwise you will have a small time penalty to answer again." +
                                 "<br> Reach the finish line to win! \n<html>",
@@ -388,9 +412,7 @@ public class TriviaMazeGUI extends JPanel {
              * Creates a mouse listener for the cheats menu item.
              */
             public void mousePressed(MouseEvent event) {
-                // Add code here ---------------
-                maze.setNoClipActivated(true);
-
+                myMaze.setMyNoClipActivated(true);
             }
         });
     }

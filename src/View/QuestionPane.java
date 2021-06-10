@@ -6,7 +6,6 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -17,6 +16,7 @@ import java.beans.PropertyChangeListener;
  * @author Eugene Oh, Jonathan Cho, Yavuzalp Turkoglu
  * @version 4.0
  */
+
 public class QuestionPane extends JPanel implements PropertyChangeListener {
 
     /**
@@ -27,47 +27,64 @@ public class QuestionPane extends JPanel implements PropertyChangeListener {
     /**
      * JLabel that contains the question.
      */
-    JLabel questiontext;
+    private JLabel myQuestionText;
+
     /**
      * JLabel that contains the correct answer.
      */
-    JLabel answerCorrect;
+    private JLabel myAnswerCorrect;
+
     /**
      * JLabel that contains the wrong answer.
      */
-    JLabel answerWrong;
+    private JLabel myAnswerWrong;
+
     /**
      * JLabel that contains the answer 1.
      */
-    JRadioButton answer1;
+    private JRadioButton myAnswer1;
+
     /**
      * JLabel that contains the answer 2.
      */
-    JRadioButton answer2;
+    private JRadioButton myAnswer2;
+
     /**
      * JLabel that contains the answer 3.
      */
-    JRadioButton answer3;
+    private JRadioButton myAnswer3;
+
     /**
      * JLabel that contains the answer 4.
      */
-    JRadioButton answer4;
+    private JRadioButton myAnswer4;
+
     /**
      * JButton for our button.
      */
-    JButton button;
+    private JButton myButton;
+
     /**
-     * ButtonGroup.
+     * ButtonGroup for each answer.
      */
-    ButtonGroup bg;
+    private ButtonGroup myButtonGroup;
+
     /**
-     * Box.
+     * Box for the answers.
      */
-    Box box;
+    private Box myBox;
+
+    /**
+     * Getter method for if the player answered the question right.
+     */
+    public Boolean getMyIsAnsweredCorrect() {
+        return myIsAnsweredCorrect;
+    }
+
     /**
      * Boolean value for whether the question is answered correctly or not.
      */
-    Boolean isAnsweredCorrect = false;
+    private Boolean myIsAnsweredCorrect;
 
     /**
      * Constructor for QuestionPane.
@@ -76,95 +93,93 @@ public class QuestionPane extends JPanel implements PropertyChangeListener {
      */
     public QuestionPane(QuestionAnswer question) {
         setLayout(new GridBagLayout());
+        myQuestionText = new JLabel("<html>" + question.getMyQuestion() + "</html>");
+        myQuestionText.setPreferredSize(new Dimension(156, 120));
+        myAnswerCorrect = new JLabel("Correct Answer!");
+        myAnswerWrong = new JLabel(String.format("<html>Wrong Answer! <br> Correct answer was: %s <br></html>", question.getCorrectAnswer()));
+        myAnswerWrong.setPreferredSize(new Dimension(156, 120));
+        myAnswerCorrect.setVisible(false);
+        myAnswerWrong.setVisible(false);
+        myIsAnsweredCorrect = false;
+        myAnswer1 = new JRadioButton(question.getAnswers()[0]);
+        myAnswer1.setActionCommand(question.getAnswers()[0]);
+        myAnswer2 = new JRadioButton(question.getAnswers()[1]);
+        myAnswer2.setActionCommand(question.getAnswers()[1]);
+        myAnswer3 = new JRadioButton(question.getAnswers()[2]);
+        myAnswer3.setActionCommand(question.getAnswers()[2]);
+        myAnswer4 = new JRadioButton(question.getAnswers()[3]);
+        myAnswer4.setActionCommand(question.getAnswers()[3]);
+        myButtonGroup = new ButtonGroup();
+        myButtonGroup.add(myAnswer1);
+        myButtonGroup.add(myAnswer2);
+        myButtonGroup.add(myAnswer3);
+        myButtonGroup.add(myAnswer4);
 
-        questiontext = new JLabel("<html>" + question.getMyQuestion() + "</html>");
-        questiontext.setPreferredSize(new Dimension(156, 120));
-        answerCorrect = new JLabel("Correct Answer!");
-        answerWrong = new JLabel(String.format("<html>Wrong Answer! <br> Correct answer was: %s <br></html>", question.getCorrectAnswer()));
-        answerWrong.setPreferredSize(new Dimension(156, 120));
+        myBox = Box.createVerticalBox();
+        myBox.add(myQuestionText);
+        myBox.add(myAnswer1);
+        myBox.add(myAnswer2);
+        myBox.add(myAnswer3);
+        myBox.add(myAnswer4);
+        myBox.add(myAnswerCorrect);
+        myBox.add(myAnswerWrong);
 
-        answerCorrect.setVisible(false);
-        answerWrong.setVisible(false);
-
-        answer1 = new JRadioButton(question.getAnswers()[0]);
-        answer1.setActionCommand(question.getAnswers()[0]);
-        answer2 = new JRadioButton(question.getAnswers()[1]);
-        answer2.setActionCommand(question.getAnswers()[1]);
-        answer3 = new JRadioButton(question.getAnswers()[2]);
-        answer3.setActionCommand(question.getAnswers()[2]);
-        answer4 = new JRadioButton(question.getAnswers()[3]);
-        answer4.setActionCommand(question.getAnswers()[3]);
-        bg = new ButtonGroup();
-        bg.add(answer1);
-        bg.add(answer2);
-        bg.add(answer3);
-        bg.add(answer4);
-
-        box = Box.createVerticalBox();
-        box.add(questiontext);
-        box.add(answer1);
-        box.add(answer2);
-        box.add(answer3);
-        box.add(answer4);
-        box.add(answerCorrect);
-        box.add(answerWrong);
-
-        button = new JButton("Submit!");
-        button.addActionListener(createActionListener(question));
-        box.add(button);
-        add(box);
+        myButton = new JButton("Submit!");
+        myButton.addActionListener(createActionListener(question));
+        myBox.add(myButton);
+        add(myBox);
     }
 
     /**
-     * Updates the questions
+     * Updates the questions.
      *
      * @param question question.
      * @param wasWrong Boolean for whether the question was wrong or not.
      */
     public void updateQuestion(QuestionAnswer question, Boolean wasWrong) {
-        questiontext = new JLabel("<html>" + question.getMyQuestion() + "</html>");
-        questiontext.setPreferredSize(new Dimension(156, 120));
-        JLabel oldAnswer = answerWrong;
-        answerWrong = new JLabel(String.format("<html>Wrong Answer! <br> Correct answer was: %s </html>", question.getCorrectAnswer()));
-        answerWrong.setPreferredSize(new Dimension(156, 120));
-        answer1 = new JRadioButton(question.getAnswers()[0]);
-        answer1.setActionCommand(question.getAnswers()[0]);
-        answer2 = new JRadioButton(question.getAnswers()[1]);
-        answer2.setActionCommand(question.getAnswers()[1]);
-        answer3 = new JRadioButton(question.getAnswers()[2]);
-        answer3.setActionCommand(question.getAnswers()[2]);
-        answer4 = new JRadioButton(question.getAnswers()[3]);
-        answer4.setActionCommand(question.getAnswers()[3]);
-        answer1.setBackground(BACKGROUND_COLOR);
-        answer2.setBackground(BACKGROUND_COLOR);
-        answer3.setBackground(BACKGROUND_COLOR);
-        answer4.setBackground(BACKGROUND_COLOR);
+        myQuestionText = new JLabel("<html>" + question.getMyQuestion() + "</html>");
+        myQuestionText.setPreferredSize(new Dimension(156, 120));
+        JLabel oldAnswer = myAnswerWrong;
+        myAnswerWrong = new JLabel(String.format("<html>Wrong Answer! <br> Correct answer was: %s </html>", question.getCorrectAnswer()));
+        myAnswerWrong.setPreferredSize(new Dimension(156, 120));
+        myAnswer1 = new JRadioButton(question.getAnswers()[0]);
+        myAnswer1.setActionCommand(question.getAnswers()[0]);
+        myAnswer2 = new JRadioButton(question.getAnswers()[1]);
+        myAnswer2.setActionCommand(question.getAnswers()[1]);
+        myAnswer3 = new JRadioButton(question.getAnswers()[2]);
+        myAnswer3.setActionCommand(question.getAnswers()[2]);
+        myAnswer4 = new JRadioButton(question.getAnswers()[3]);
+        myAnswer4.setActionCommand(question.getAnswers()[3]);
+        myAnswer1.setBackground(BACKGROUND_COLOR);
+        myAnswer2.setBackground(BACKGROUND_COLOR);
+        myAnswer3.setBackground(BACKGROUND_COLOR);
+        myAnswer4.setBackground(BACKGROUND_COLOR);
         repaint();
-        bg = new ButtonGroup();
-        bg.add(answer1);
-        bg.add(answer2);
-        bg.add(answer3);
-        bg.add(answer4);
-        box.removeAll();
-        box.add(oldAnswer);
-        box.add(new JLabel("\n"));
-        box.add(questiontext);
-        box.add(answer1);
-        box.add(answer2);
-        box.add(answer3);
-        box.add(answer4);
-        box.add(answerCorrect);
-        box.add(answerWrong);
+        myButtonGroup = new ButtonGroup();
+        myButtonGroup.add(myAnswer1);
+        myButtonGroup.add(myAnswer2);
+        myButtonGroup.add(myAnswer3);
+        myButtonGroup.add(myAnswer4);
+        myBox.removeAll();
+        myBox.add(oldAnswer);
+        myBox.add(new JLabel("\n"));
+        myBox.add(myQuestionText);
+        myBox.add(myAnswer1);
+        myBox.add(myAnswer2);
+        myBox.add(myAnswer3);
+        myBox.add(myAnswer4);
+        myBox.add(myAnswerCorrect);
+        myBox.add(myAnswerWrong);
         oldAnswer.setVisible(wasWrong);
-        answerCorrect.setVisible(false);
-        answerWrong.setVisible(false);
-        for (ActionListener al : button.getActionListeners()) {
-            button.removeActionListener(al);
+        myAnswerCorrect.setVisible(false);
+        myAnswerWrong.setVisible(false);
+        for (ActionListener al : myButton.getActionListeners()) {
+            myButton.removeActionListener(al);
         }
-        button.addActionListener(createActionListener(question));
-        button.setEnabled(true);
-        box.add(button);
-        add(box);
+        myButton.addActionListener(createActionListener(question));
+        myButton.setEnabled(true);
+        myBox.add(myButton);
+        add(myBox);
         revalidate();
         repaint();
     }
@@ -176,26 +191,26 @@ public class QuestionPane extends JPanel implements PropertyChangeListener {
      * @return question.
      */
     public ActionListener createActionListener(QuestionAnswer question) {
-        return new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (question.isCorrectAnswer(bg.getSelection().getActionCommand())) {
-                    answerCorrect.setVisible(true);
-                    isAnsweredCorrect = true;
-                    question.setIsAnswered(true);
-                } else {
-                    answerWrong.setVisible(true);
-                    isAnsweredCorrect = false;
-                }
-                for (JRadioButton button : new JRadioButton[]{answer1, answer2, answer3, answer4}) {
-                    button.setEnabled(false);
-                }
-                button.setEnabled(false);
-                fireChangeListeners();
+        return e -> {
+            if (question.isCorrectAnswer(myButtonGroup.getSelection().getActionCommand())) {
+                myAnswerCorrect.setVisible(true);
+                myIsAnsweredCorrect = true;
+                question.setIsAnswered(true);
+            } else {
+                myAnswerWrong.setVisible(true);
+                myIsAnsweredCorrect = false;
             }
+            for (JRadioButton button : new JRadioButton[]{myAnswer1, myAnswer2, myAnswer3, myAnswer4}) {
+                button.setEnabled(false);
+            }
+            myButton.setEnabled(false);
+            fireChangeListeners();
         };
     }
 
+    /**
+     * Sets the size of the question panel.
+     */
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(240, 250);
@@ -212,9 +227,11 @@ public class QuestionPane extends JPanel implements PropertyChangeListener {
         g2d.dispose();
     }
 
+    /**
+     * Default override blank method.
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-//            System.out.println("event: " + evt);
     }
 
     /**
@@ -224,15 +241,6 @@ public class QuestionPane extends JPanel implements PropertyChangeListener {
      */
     public void addChangeListener(ChangeListener listener) {
         listenerList.add(ChangeListener.class, listener);
-    }
-
-    /**
-     * Removes a change listener.
-     *
-     * @param listener the listener you want to change to.
-     */
-    public void removeChangeListener(ChangeListener listener) {
-        listenerList.remove(ChangeListener.class, listener);
     }
 
     /**

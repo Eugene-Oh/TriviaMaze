@@ -1,11 +1,5 @@
 package src.Model;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 
 /**
@@ -14,44 +8,48 @@ import java.util.Arrays;
  * @author Eugene Oh, Jonathan Cho, Yavuzalp Turkoglu
  * @version Spring 2021
  */
+
 public class QuestionAnswer {
+
     /**
      * String for the question.
      */
     private String myQuestion;
+
     /**
      * String for the correct answer.
      */
     private String myCorrectAnswer;
+
     /**
      * String Array for the answers.
      */
     private String[] myAnswers;
+
     /**
      * Boolean which represents whether the question has been answered or not.
      */
     private Boolean isAnswered;
 
     /**
-     * Constructor.
+     * Constructor for setting the questions and answers.
      *
-     * @param theQuestion      The string question
-     * @param theAnswers       a list of answer options
-     * @param theCorrectAnswer the correct answer
+     * @param theQuestion      The questions string.
+     * @param theAnswers       A list of answer options.
+     * @param theCorrectAnswer The correct answer.
      */
     public QuestionAnswer(String theQuestion, String[] theAnswers, String theCorrectAnswer) {
         myQuestion = theQuestion;
         myAnswers = theAnswers;
         myCorrectAnswer = theCorrectAnswer;
         isAnswered = false;
-
     }
 
     /**
      * Checks if the answer is correct.
      *
-     * @param theAnswer inputted answer.
-     * @return boolean value depending if the answer was correct or not.
+     * @param theAnswer The inputted answer.
+     * @return Boolean value depending if the answer was correct or not.
      */
     public Boolean isCorrectAnswer(String theAnswer) {
         return myCorrectAnswer.equals(theAnswer);
